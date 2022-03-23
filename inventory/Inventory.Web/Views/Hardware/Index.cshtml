@@ -1,0 +1,445 @@
+﻿@model PagedList.IPagedList<Inventory.Web.ViewModels.PagedListVM>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+    var TotalItems = String.Format("{0:N0}", Model.TotalItemCount);
+    var assetListId = ViewBag.AssetListId ?? 0;
+}
+
+<style>
+    .pagination {
+        margin: 0px;
+    }
+
+    @@media only screen and (max-width: 1380px) {
+        .one {
+            display: none;
+        }
+
+        .two {
+            display: table-cell;
+        }
+    }
+
+    @@media only screen and (min-width: 1381px) {
+        .one {
+            display: table-cell;
+        }
+
+        .two {
+            display: none;
+        }
+    }
+</style>
+
+<div class="container maxwidth">
+    <h2>@ViewBag.AssetType</h2>
+
+    @using (Html.BeginForm("Index", null, FormMethod.Get))
+    {
+        if (ViewBag.InvoiceItemId != null)
+        {
+            <input type="hidden" name="InvoiceItemId" value="@ViewBag.InvoiceItemId" />
+        }
+        if (ViewBag.AssetCategory != null)
+        {
+            <input type="hidden" name="AssetCategory" value="@ViewBag.AssetCategory" />
+        }
+        if (ViewBag.AssetId != null)
+        {
+            <input type="hidden" name="AssetId" value="@ViewBag.AssetId" />
+        }
+        if (ViewBag.ShowConnectedAssets != null)
+        {
+            <input type="hidden" name="ShowConnectedAssets" value="@ViewBag.ShowConnectedAssets.ToString()" />
+        }
+        if (ViewBag.CurrentSort != null)
+        {
+            <input type="hidden" name="sortOrder" value="@ViewBag.CurrentSor" t />
+        }
+        if (ViewBag.ActiveStatus != null)
+        {
+            <input type="hidden" name="activeStatus" value="@ViewBag.ActiveStatus" />
+        }
+        if (ViewBag.Manufacturer != null)
+        {
+            <input type="hidden" name="manuId" value="@ViewBag.Manufacturer" />
+        }
+        if (ViewBag.Product != null)
+        {
+            <input type="hidden" name="productId" value="@ViewBag.Product" />
+        }
+        if (ViewBag.Location != null)
+        {
+            <input type="hidden" name="locationId" value="@ViewBag.Location" />
+        }
+        if (ViewBag.Building != null)
+        {
+            <input type="hidden" name="buildingId" value="@ViewBag.Building" />
+        }
+        if (ViewBag.Room != null)
+        {
+            <input type="hidden" name="roomId" value="@ViewBag.Room" />
+        }
+        if (ViewBag.AssetListId != null)
+        {
+            <input type="hidden" name="assetListId" value="@ViewBag.AssetListId" />
+        }
+
+        <div class="row mb-1">
+            <div class="col-sm-12">
+                <font class="small">Total Items: @TotalItems</font>
+                <font class="medium d-print-none">|</font>
+                @Html.ActionLink(" ", "ExportToExcel", "Hardware", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, invoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Class = "far fa-file-excel text-decoration-none d-print-none", @Title = "Excel" })
+                @Html.ActionLink(" ", "Index", null, new { @Onclick = "window.print();", @Class = "fas fa-print text-decoration-none d-print-none", @Title = "Print" })
+
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("HardwareView")))
+                {
+                    if (Model.Where(x => x.AssetList.Any(al => al != null)).Count() > 0)
+                    {
+                        <font class="medium d-print-none">|</font>
+                        if (User.IsInRole("AssetListManage") && (Model.Where(x => x.AssetList.Any(al => al.IsOwner == true)).Count() > 0))
+                        {
+                            <a href="javascript:" type="button" class="fa-sm far fa-plus-square text-decoration-none d-print-none" id="AddToList" title="Add To List"></a>
+                            <a href="javascript:" type="button" class="fa-sm far fa-minus-square text-decoration-none d-print-none" id="RemoveFromList" title="Remove From List"></a>
+                        }
+                        foreach (var item in Model.Select(x => x.AssetList.GroupBy(g => new { g.Id, g.Name, g.Shared, g.IsOwner, g.UserFullName }).Select(s => new { s.Key.Id, s.Key.Name, s.Key.Shared, s.Key.IsOwner, s.Key.UserFullName })).FirstOrDefault().OrderBy(x => x.Name))
+                        {
+                            if (item.Shared == true && item.IsOwner == false)
+                            {
+                                @Html.ActionLink(item.Name, "Index", "Hardware", new { assetListId = item.Id }, new { @class = (ViewBag.AssetListId == item.Id) ? "small text-decoration-none font-weight-bold d-print-none" : "small text-decoration-none d-print-none" })
+                                <small class="fas fa-xs fa-user-friends" style="color: royalblue" title="@item.UserFullName">,</small>
+                            }
+                            else
+                            {
+                                @Html.ActionLink(item.Name + ", ", "Index", "Hardware", new { assetListId = item.Id }, new { @class = (ViewBag.AssetListId == item.Id) ? "small text-decoration-none font-weight-bold d-print-none" : "small text-decoration-none d-print-none" })
+                            }
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-end d-print-none">
+            <div class="col-xl-9 align-middle">
+                @Html.ActionLink("| Filter: ", "Index", new { sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = "small text-dark text-decoration-none" })
+                @foreach (var item in Model.Select(x => x.AssetStatuses.GroupBy(g => new { g.Id, g.Name, g.Sequence }).Select(s => new { s.Key.Id, s.Key.Name, s.Key.Sequence })).FirstOrDefault().OrderBy(x => x.Sequence))
+                {
+                    @Html.ActionLink(item.Name + ", ", "Index", "Hardware", new { activeStatus = item.Id, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = ViewBag.ActiveStatus == item.Id ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                }
+                @if (Model.Select(x => x.ConnectedAsset).FirstOrDefault())
+                {
+                    @Html.ActionLink("Connected, ", "Index", "Hardware", new { showConnectedAssets = true, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = ViewBag.ShowConnectedAssets != null ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                }
+                @if (Model.TotalItemCount > 0)
+                {
+                    @Html.ActionLink("Location,", "Index", "Hardware", new { showLocations = !ViewBag.ShowLocations, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = (ViewBag.ShowLocations || ViewBag.Location != null) ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                }
+
+                @if (ViewBag.ShowLocations || ViewBag.Location != null)
+                {
+                    foreach (var item in Model.Select(x => x.Locations).FirstOrDefault().OrderBy(x => x.Name))
+                    {
+                        @Html.ActionLink(item.Name + ", ", "Index", "Hardware", new { locationId = item.Id, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = ViewBag.Location != null ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                    }
+                    if (ViewBag.Location != null)
+                    {
+                        @Html.ActionLink("Building, ", "Index", "Hardware", new { showBuildings = !ViewBag.ShowBuildings, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = (ViewBag.ShowBuildings || ViewBag.Building != null) ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+
+                        if (ViewBag.ShowBuildings || ViewBag.Building != null)
+                        {
+                            foreach (var item in Model.Select(x => x.Buildings).FirstOrDefault().OrderBy(x => x.Name))
+                            {
+                                @Html.ActionLink(item.Name + ", ", "Index", "Hardware", new { buildingId = item.Id, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = ViewBag.Building != null ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                            }
+                        }
+
+                        if (ViewBag.Building != null)
+                        {
+
+                            @Html.ActionLink("Room,", "Index", "Hardware", new { showRooms = !ViewBag.ShowRooms, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = (ViewBag.ShowRooms || ViewBag.Room != null) ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+
+                            if (ViewBag.ShowRooms || ViewBag.Room != null)
+                            {
+                                foreach (var item in Model.Select(x => x.Rooms).FirstOrDefault().OrderBy(x => x.Name))
+                                {
+                                    @Html.ActionLink(item.Name + ", ", "Index", "Hardware", new { roomId = item.Id, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = ViewBag.Room != null ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @if (Model.TotalItemCount > 0)
+                {
+                    @Html.ActionLink("Category,", "Index", "Hardware", new { showCategories = !ViewBag.ShowCategories, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = (ViewBag.ShowCategories || ViewBag.AssetCategory != null) ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                }
+
+                @if (ViewBag.ShowCategories || ViewBag.AssetCategeory != null)
+                {
+
+                    foreach (var item in Model.Select(x => x.AssetCategories).FirstOrDefault().OrderBy(x => x.Name))
+                    {
+                        @Html.ActionLink(item.Name + ", ", "Index", "Hardware", new { assetCategory = item.Name, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = ViewBag.AssetCategory != null ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                    }
+                    if (ViewBag.AssetCategory != null)
+                    {
+                        foreach (var item in Model.Select(x => x.Manufacturers).FirstOrDefault().OrderBy(x => x.Name))
+                        {
+                            @Html.ActionLink(item.Name + ", ", "Index", "Hardware", new { manuId = item.Id, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = ViewBag.Manufacturer != null ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                        }
+                    }
+                    if (ViewBag.Manufacturer != null)
+                    {
+
+                        foreach (var item in Model.Select(x => x.Products).FirstOrDefault().OrderBy(x => x.Name))
+                        {
+                            @Html.ActionLink(item.Name + ", ", "Index", "Hardware", new { productId = item.Id, manuId = ViewBag.Manufacturer, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = ViewBag.Product != null ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                        }
+                    }
+                }
+                <small>|</small>
+            </div>
+
+            <div class="col-xl-3 form-inline text-xl-right d-sm-table d-md-table d-lg-table d-xl-table d-print-none pt-2 pt-xl-0">
+                @Html.TextBox("SearchString", ViewBag.CurrentSearch as string, new { @class = "form-control form-control-sm", @placeholder = "Search", @style = "width: 200px;", @maxlength = "30" })
+                <input type="submit" value="Search" class="btn btn-secondary btn-sm" style="margin-left: 5px;" />
+            </div>
+        </div>
+
+    }
+</div>
+
+<div class="container maxwidth">
+
+    <table class="table table-striped table-bordered" style="vertical-align:middle;">
+        <thead>
+            <tr>
+                @if ((User.Identity.IsAuthenticated) && ((User.IsInRole("HardwareEdit")) || (User.IsInRole("ManageParkAssets"))))
+                {
+                    <th scope="col" class="text-center d-print-none" style="width: 30px;">
+                        <input type="checkbox" id="checkedAll" name="checkedAll">
+                    </th>
+                }
+                <th scope="col" class="text-center d-print-none" style="width: 40px;">
+                    @Html.ActionLink("C", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CategorySortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Hardware Category" })
+                </th>
+                @if (ViewBag.AssetCategory == "Desktop" || ViewBag.AssetCategory == "Laptop" || ViewBag.AssetCategory == "Server" || ViewBag.AssetCategory == "Switch" || ViewBag.AssetCategory == "Printer")
+                {
+                    <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-none d-xl-table-cell d-print-table-cell">
+                        @Html.ActionLink("Name", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.NameSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Name" })
+                    </th>
+                }
+                else
+                {
+                    <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-none d-xl-table-cell d-print-table-cell">
+                        @Html.ActionLink("Make", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.ManuSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Make" })
+                    </th>
+                }
+                <th scope="col" class="w-auto d-none d-sm-none d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Model", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.ProductSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Model" })
+                </th>
+                @if (ViewBag.AssetCategory == "Desktop" || ViewBag.AssetCategory == "Laptop" || ViewBag.AssetCategory == "Server")
+                {
+                    <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                        @Html.ActionLink("Drawer", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.DrawerSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Drawer" })
+                    </th>
+                }
+                <th scope="col" class="w-auto d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Asset", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.AssetSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Asset Tag" })
+                </th>
+                <th scope="col" class="w-auto">
+                    @Html.ActionLink("Serial", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.SerialSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Serial" })
+                </th>
+
+                @if (ViewBag.ActiveStatus == 7)
+                {
+                    <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                        @Html.ActionLink("SNF", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.SNFSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Surplus Number" })
+                    </th>
+                }
+                else
+                {
+                    <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                        @Html.ActionLink("Assigned", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.AssignedUserSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Assigned User" })
+                    </th>
+                }
+                <th scope="col" class="w-auto text-center">
+                    @Html.ActionLink("Loc", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.LocationSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Location" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-none d-lg-none d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Building", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.BuildingSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Building" })
+                </th>
+                <th scope="col" class="w-auto text-center d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Room", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.RoomSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Room" })
+                </th>
+                <th scope="col" class="w-auto text-center d-print-none">
+                    @Html.ActionLink("Item", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.InvoiceSortOrder, currentSearch = ViewBag.CurrentSearch, AssetListId = ViewBag.AssetListId }, new { @Title = "Item Number" })
+                </th>
+                <th scope="col" class="one text-center">
+                    @Html.ActionLink("Status", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.StatusSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Status" })
+                </th>
+                <th scope="col" class="two text-center d-print-none">
+                    @Html.ActionLink("Status", "Index", new { manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.StatusSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Status" })
+                </th>
+                <th scope="col" style="width: 80px;" class="d-print-none">
+                    @if ((User.Identity.IsAuthenticated) && ((User.IsInRole("HardwareEdit")) || (User.IsInRole("ManageParkAssets"))))
+                    {
+                        <button type="button" class="btn btn-sm btn-light" id="GetAssets" data-type="Edit Assets" style=" display: block; width: 100%; padding: initial"><i class="far fa-edit"></i></button>
+                    }
+                </th>
+            </tr>
+        </thead>
+        <tbody class="align-text-bottom">
+            @{
+                Html.RenderPartial("_List");
+            }
+        </tbody>
+    </table>
+
+    <div class="row mb-1 d-print-none">
+        <div class="col-sm-4" style="margin-bottom:5px;">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        </div>
+        <div class="col-sm-8 form-inline text-right">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, manuId = ViewBag.Manufacturer, productId = ViewBag.Product, assetCategory = ViewBag.AssetCategory, roomId = ViewBag.Room, buildingId = ViewBag.Building, locationId = ViewBag.Location, activeStatus = ViewBag.ActiveStatus, assetId = ViewBag.AssetId, showConnectedAssets = ViewBag.ShowConnectedAssets, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, invoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }))
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AssetBulkModal" tabindex="-1" role="dialog" aria-labelledby="AssetBulkModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AssetBulkModalLabel"></h5>
+                <small style="margin-top:8px" id="AssetBulkModalCount"></small>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            @using (Html.BeginForm("BulkEdit", "Hardware", FormMethod.Post, new { @Id = "AssetBulkForm" }))
+            {
+                <div class="modal-body">
+
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="AssetIds" name="AssetIds" />
+                    <input type="hidden" id="AssignedUserId" name="AssignedUserId">
+
+                    @if ((User.Identity.IsAuthenticated) && (User.IsInRole("HardwareEdit")))
+                    {
+                        <div class="form-group" id="DateReceivedDiv">
+                            <label class="col-form-label">DateReceived</label>
+                            <div>
+                                <input type="date" id="DateReceived" name="DateReceived" class="form-control">
+                                @Html.ValidationMessage("DateReceived", "", new { @id = "Val_DateReceived", @class = "text-danger" })
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-group" id="StatusDiv">
+                        <label class="col-form-label">Status</label>
+                        <div>
+                            <select name="StatusId" id="Status" class="form-control"></select>
+                            @Html.ValidationMessage("Status", "", new { @id = "Val_Status", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group was-validated" id="SurplusDateDiv" style="display:none;">
+                        <label class="col-form-label">Surplus Date</label>
+                        <div>
+                            <input type="date" id="SurplusDate" name="SurplusDate" class="form-control">
+                            @Html.ValidationMessage("SurplusDate", "", new { @id = "Val_SurplusDate", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group was-validated" id="SNFnumberDiv" style="display:none;">
+                        <label class="col-form-label">Surplus Number</label>
+                        <div>
+                            <input id="SNFnumber" name="SNFnumber" class="form-control" min="4" maxlength="15">
+                            @Html.ValidationMessage("SNFnumber", "", new { @id = "Val_SNFnumber", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group was-validated" id="AssignedUserDiv">
+                        <label class="col-form-label">Assigned User</label>
+                        <div>
+                            <select name="AssignedUser" id="AssignedUser" class="form-control border selectpicker"></select>
+                            @Html.ValidationMessage("AssignedUser", "", new { @id = "Val_AssignedUser", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="LocationDiv">
+                        <label class="col-form-label">Location</label>
+                        <div>
+                            <select name="LocationId" id="Location" class="form-control"></select>
+                            @Html.ValidationMessage("Location", "", new { @id = "Val_Location", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="BuildingDiv">
+                        <label class="col-form-label">Building</label>
+                        <div>
+                            <select name="BuildingId" id="Building" class="form-control"></select>
+                            @Html.ValidationMessage("Building", "", new { @id = "Val_Building", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="RoomDiv">
+                        <label class="col-form-label">Room</label>
+                        <div>
+                            <select name="RoomId" id="Room" class="form-control"></select>
+                            @Html.ValidationMessage("Room", "", new { @id = "Val_Room", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="NotesDiv">
+                        <label class="col-form-label">Notes</label>
+                        <div>
+                            <textarea name="Notes" id="Notes" rows="3" class="form-control"></textarea>
+                            @Html.ValidationMessage("Notes", "", new { @id = "Val_Notes", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btn-submit" disabled>Save</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@{
+    Html.RenderPartial("../AssetList/_ListEdit");
+}
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            style: 'btn-light, text-dark',
+            size: 10,
+            dropupAuto: true,
+        });
+
+        Common.CheckedAll();
+        Asset.GetBulkAssets("Hardware/BulkEdit");
+        Asset.UpdateAssignedUserId("Asset/GetUserDefaultLocation");
+        Asset.GetBuildings("Asset/Buildings");
+        Asset.GetRooms("Asset/Rooms");
+        Asset.EditBulkAssets("Hardware/BulkEdit");
+        Common.DisableEnableSubmit("#AssetBulkForm");
+
+        AssetList.AddToList("Hardware");
+        AssetList.RemoveFromList(@assetListId, "Hardware");
+
+    </script>
+
+}

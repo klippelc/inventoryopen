@@ -1,0 +1,247 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNet.Identity
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="icon" href="~/Content/Images/icon1.png" type="image/png">
+
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cssjqryUi")
+    @Styles.Render("~/Content/css-bootstrap-select")
+    @Styles.Render("~/Content/css-tagsinput")
+
+<style>
+        .form-control[readonly] {
+            background-color: transparent;
+            opacity: 1;
+        }
+
+        .form-group {
+            margin-bottom: .5rem;
+        }
+
+        .table th, .table td {
+            padding: 0.35rem;
+        }
+
+        .maxwidth {
+            width: 100%;
+            max-width: 2560px;
+        }
+
+        @@media (min-width: 576px) {
+            .form-inline {
+                display: table-row;
+                float: right;
+            }
+        }
+
+        .pagination {
+            display: inline-flex;
+        }
+
+        .was-validated .bootstrap-select select:valid + .dropdown-toggle {
+            border: 1px solid #ced4da;
+        }
+
+        .was-validated .bootstrap-select select:invalid + .dropdown-toggle {
+            border: 1px solid #dc3545;
+        }
+
+        .was-validated .form-control:invalid, .form-control.is-invalid {
+            background-position: center right calc(.475em + .8875rem);
+            padding-right: 0px;
+        }
+
+        .was-validated .form-control:valid, .form-control.is-valid {
+            background-position: center right calc(.475em + .8875rem);
+            padding-right: 0px;
+            background-image: none;
+            border: 1px solid #ced4da;
+        }
+
+        .was-validated .form-control:valid:focus, .form-control.is-valid:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .input-validation-error, .form-control.form-control.input-validation-error {
+            border-color: #dc3545;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: center right calc(.475em + .8875rem);
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        .input-validation-error:focus, .form-control.form-control.input-validation-error:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        [data-letters]:before {
+            content: attr(data-letters);
+                display: none;
+        }
+
+        @@media (min-width: 991px) {
+            [data-letters]:before {
+                content: attr(data-letters);
+                display: inline-block;
+                font-size: 15px;
+                width: 24px;
+                height: 24px;
+                line-height: 24px;
+                text-align: center;
+                border-radius: 50%;
+                background: white;
+                vertical-align: initial;
+                margin-left: 5px;
+                color: #333232;
+                float:right;
+            }
+            .navbar-expand-lg .navbar-nav .nav-link {
+                display: inline-block;
+            }
+        }
+
+</style>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark d-print-none">
+        @Html.ActionLink("Asset Management System", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+                aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse d-print-none" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto" tabindex="-1">
+
+                @if ((User.Identity.IsAuthenticated) && ((User.IsInRole("ManufacturersManage") || User.IsInRole("ProductsManage") || User.IsInRole("SuppliersManage")
+                                || User.IsInRole("LocationsManage") || User.IsInRole("BuildingsManage") || User.IsInRole("RoomsManage") || User.IsInRole("AssetListManage")
+                                || User.IsInRole("UsersManage"))))
+                {
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle @(!string.IsNullOrEmpty(ViewBag.SettingsType) ? "active" : "")" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            @if (User.IsInRole("ManufacturersManage"))
+                            {
+                                @Html.ActionLink("Manufacturers", "Index", "Manufacturer", new { area = "" }, new { @class = "dropdown-item" })
+                            }
+                            @if (User.IsInRole("ProductsManage"))
+                            {
+                                @Html.ActionLink("Products", "Index", "Product", new { area = "" }, new { @class = "dropdown-item" })
+                            }
+                            @if (User.IsInRole("SuppliersManage"))
+                            {
+                                @Html.ActionLink("Suppliers", "Index", "Supplier", new { area = "" }, new { @class = "dropdown-item" })
+                            }
+                            @if (User.IsInRole("LocationsManage"))
+                            {
+                                @Html.ActionLink("Locations", "Index", "Location", new { area = "" }, new { @class = "dropdown-item" })
+                            }
+                            @if (User.IsInRole("BuildingsManage"))
+                            {
+                                @Html.ActionLink("Buildings", "Index", "Building", new { area = "" }, new { @class = "dropdown-item" })
+                            }
+                            @if (User.IsInRole("RoomsManage"))
+                            {
+                                @Html.ActionLink("Rooms", "Index", "Room", new { area = "" }, new { @class = "dropdown-item" })
+                            }
+                            @if (User.IsInRole("AssetListManage"))
+                            {
+                                @Html.ActionLink("AssetLists", "Index", "AssetList", new { area = "" }, new { @class = "dropdown-item" })
+                            }
+                            @if (User.IsInRole("UsersManage"))
+                            {
+                                @Html.ActionLink("Users", "Index", "User", new { area = "" }, new { @class = "dropdown-item" })
+                            }
+                        </div>
+                    </li>
+                }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("InvoicesView"))
+                    {
+                        <li class="nav-item @(ViewBag.PageName == "Purchase Order" ? "active" : "")">
+                            @Html.ActionLink("Purchase Orders", "Index", "Invoice", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+                    if (User.IsInRole("InvoiceItemsView"))
+                    {
+                        <li class="nav-item @(ViewBag.PageName == "PO Item" ? "active" : "")">
+                            @Html.ActionLink("PO Items", "Index", "InvoiceItem", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+                    if ((User.IsInRole("HardwareView")) || (User.IsInRole("ManageParkAssets")))
+                    {
+                        <li class="nav-item @(ViewBag.AssetType == "Hardware" ? "active" : "")">
+                            @Html.ActionLink("Hardware", "Index", "Hardware", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+                    if ((User.IsInRole("SoftwareView")) || (User.IsInRole("ManageParkAssets")))
+                    {
+                        <li class="nav-item @(ViewBag.AssetType == "Software" ? "active" : "")">
+                            @Html.ActionLink("Software", "Index", "Software", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+                    if (User.IsInRole("UserAssetView"))
+                    {
+                        <li class="nav-item @(ViewBag.PageName == "My Assets" ? "active" : "")">
+                            @Html.ActionLink("My Assets", "Index", "UserAsset", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+                }
+            </ul>
+            @{
+                var claims = (ClaimsIdentity)User.Identity;
+                var initials = (claims.FindFirstValue("Initials"));
+                var username = User.Identity.Name;
+            }
+
+            <ul class="navbar-nav mr-md-n2" title=@username>
+                <li class="nav-item @(ViewBag.AssetType == "Login" ? "active" : "")">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @Html.ActionLink("Logout", "Logoff", "Account", null, new { @Class = "nav-link", @data_letters = initials })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Login", "Login", "Account", new { area = "" }, new { @class = "nav-link" })
+                    }
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main role="main">
+        @*<div class="jumbotron jumbotron-fluid" style="padding-top:5px"></div>*@
+        <div style="padding-top:70px"></div>
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-info">@TempData["Message"]</div>
+        }
+
+        @RenderBody()
+    </main>
+</body>
+</html>
+
+@Scripts.Render("~/bundles/jquery", "~/bundles/jqueryval", "~/bundles/jqueryui", "~/bundles/popper", "~/bundles/bootstrap", "~/bundles/jsengine")
+@Scripts.Render("~/bundles/bootstrapselect")
+@Scripts.Render("~/bundles/tagsinput")
+@RenderSection("scripts", required: false)

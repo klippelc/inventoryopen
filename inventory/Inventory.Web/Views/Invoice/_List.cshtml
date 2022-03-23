@@ -1,0 +1,48 @@
+﻿@model PagedList.IPagedList<Inventory.Web.ViewModels.InvoiceVM>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td class="text-break d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-none">
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td class="text-break">
+            @Html.DisplayFor(modelItem => item.PONumber)
+        </td>
+        <td class="text-break d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+            @Html.DisplayFor(modelItem => item.SupplierName)
+        </td>
+        <td class="text-break text-center">
+            (@Html.ActionLink(item.InvoiceItemsCount.ToString(), "Index", "InvoiceItem", new { invoiceId = item.Id }, new { @Title = "Invoice Items", @class = "text-decoration-none" }))
+            @Html.DisplayFor(modelItem => item.InvoiceItemsTotal)
+        </td>
+        <td class="text-break text-center d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+            @Html.DisplayFor(modelItem => item.TotalPrice)
+        </td>
+        <td class="text-break text-center d-none d-sm-none d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+            @(item.PurchaseDate?.ToString("MM/dd/yyyy"))
+        </td>
+        <td class="d-print-none text-center">
+            <div class="btn-group">
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesEdit")))
+                {
+                    <a href="@Url.Action("Edit", "Invoice", new { id = item.Id })" class="btn-sm btn-light">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                }
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesView")))
+                {
+                    <a href="@Url.Action("Details", "Invoice", new { id = item.Id })" class="btn-sm btn-light">
+                        <i class="fa fa-list"></i>
+                    </a>
+                }
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesDelete")))
+                {
+                    <a href="@Url.Action("Delete", "Invoice", new { id = item.Id })" class="btn-sm btn-light">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                }
+            </div>
+        </td>
+    </tr>
+}

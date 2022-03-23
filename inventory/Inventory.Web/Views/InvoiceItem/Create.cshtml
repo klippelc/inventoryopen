@@ -1,0 +1,318 @@
+﻿@model Inventory.Web.ViewModels.InvoiceItemVM
+
+@{
+    ViewBag.Title = ViewBag.PageName;
+}
+
+<style>
+    .inputfield {
+        height: 200px;
+    }
+</style>
+
+<div class="container">
+
+    @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @id = "InvoiceItemForm" }))
+
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Create - @ViewBag.PageName</h4>
+        <hr />
+        @Html.HiddenFor(model => model.PreviousUrl)
+
+        <div class="form-group row was-validated" id="InvoiceDiv">
+            @Html.LabelFor(model => model.Invoice, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-6 col-lg-5 col-xl-4">
+                <div class="@Html.Raw((User.Identity.IsAuthenticated) && ((User.IsInRole("InvoicesCreate")) || (User.IsInRole("InvoicesEdit"))) ? "d-flex" : "")">
+                    @Html.DropDownListFor(model => model.InvoiceId, new SelectList(Model.Invoices, "Id", "PONumber"), "Please Select", new { @id = "InvoiceNumber", @class = "form-control border selectpicker mr-1", @required = "true" })
+                    @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesCreate")))
+                    {
+                        <button type="button" class="btn btn-light" id="BlankInvoice" data-type="Create Purchase Order"><i class="far fa-plus-square"></i></button>
+
+                    }
+                    @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesEdit")))
+                    {
+                        <button type="button" class="btn btn-light" id="GetInvoice" data-type="Edit Purchase Order"><i class="far fa-edit"></i></button>
+
+                    }
+                </div>
+                @Html.ValidationMessageFor(model => model.InvoiceId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="TypeDiv">
+            @Html.LabelFor(model => model.AssetType, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-6 col-lg-5 col-xl-4">
+                @Html.DropDownListFor(model => model.AssetTypeId, new SelectList(Model.AssetTypes, "Id", "Name"), "Please Select", new { @id = "AssetType", @class = "form-control", @required = "true" })
+                @Html.ValidationMessageFor(model => model.AssetTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="AssetCategoryDiv" style="display: none;">
+            @Html.LabelFor(model => model.AssetCategory, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-6 col-lg-5 col-xl-4">
+                @Html.DropDownListFor(model => model.AssetCategoryId, new SelectList(Model.AssetCategories, "Id", "Name"), "Please Select", new { @id = "AssetCategory", @class = "form-control", @required = "true" })
+                @Html.ValidationMessageFor(model => model.AssetCategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="ManuDiv" style="display:none;">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2" id="ManuLabel">Manufacturer</label>
+            <div class="col-md-6 col-lg-5 col-xl-4">
+                @Html.DropDownListFor(model => model.ManuId, new SelectList(Model.Manufacturers, "Id", "DisplayName"), "Please Select", new { @id = "Manufacturer", @class = "form-control", @required = "true" })
+                @Html.ValidationMessageFor(model => model.ManuId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="ProductDiv" style="display:none;">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2" id="ProductLabel">Product</label>
+            <div class="col-md-6 col-lg-5 col-xl-4">
+                @Html.DropDownListFor(model => model.ProductId, new SelectList(Model.Products, "Id", "DisplayName"), "Please Select", new { @id = "Product", @class = "form-control myid", @required = "true" })
+                @Html.ValidationMessageFor(model => model.ProductId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="LicenseTypeDiv" style="display:none;">
+            @Html.LabelFor(model => model.LicenseType, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-6 col-lg-5 col-xl-4">
+                @Html.DropDownListFor(model => model.LicenseTypeId, new SelectList(Model.LicenseTypes, "Id", "Name"), "Please Select", new { @id = "LicenseType", @class = "form-control", @required = "true" })
+                @Html.ValidationMessageFor(model => model.LicenseTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="LicenseSingleDiv" style="display: none;">
+            @Html.LabelFor(model => model.LicenseKeySingle, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.EditorFor(model => model.LicenseKeySingle, new { htmlAttributes = new { @id = "LicenseSingle", @class = "form-control", @minlength = "5", @maxlength = "25" } })
+                @Html.ValidationMessageFor(model => model.LicenseKeySingle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="QuantityDiv" style="display:none;">
+            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @id = "Quantity", @class = "form-control", min = "1", max = "1000", @maxlength = "4", @required = "true" } })
+                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="UnitPriceDiv">
+            @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @id = "UnitPrice", @class = "form-control", placeholder = "0.00", min = "0", max = "100000", @maxlength = "8", @required = "true", @pattern = "^\\d{0,5}(\\.\\d{2,2})?$" } })
+                @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="ExpirationDateDiv" style="display:none;">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2" id="ExpirationDateLabel">End of Warranty</label>
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.ExpirationDate, new { htmlAttributes = new { @id = "ExpirationDate", @class = "form-control", placeholder = "Select Date", @required = "true", @type = "date" } })
+                @Html.ValidationMessageFor(model => model.ExpirationDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="SpecsDiv">
+            @Html.LabelFor(model => model.Specifications, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.EditorFor(model => model.Specifications, new { htmlAttributes = new { @class = "form-control", @maxlength = "500", @rows = "4" } })
+                @Html.ValidationMessageFor(model => model.Specifications, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @maxlength = "500", @rows = "4" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="DefaultValuesDiv" style="display:none;">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2"></label>
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                <span class="h6">-------------- Default Values --------------</span>
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="DateReceivedDiv" style="display:none;">
+            @Html.LabelFor(model => model.DateReceived, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.DateReceived, new { htmlAttributes = new { @id = "DateReceived", @class = "form-control", placeholder = "Select Date", @required = "true", @type = "date" } })
+                @Html.ValidationMessageFor(model => model.DateReceived, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LicenseMultiDiv" style="display: none;">
+            @Html.LabelFor(model => model.LicenseKeyMulti, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.EditorFor(model => model.LicenseKeyMulti, new { htmlAttributes = new { @id = "LicenseMulti", @class = "form-control form-control-sm removewhitespace", @maxlength = "1000", @rows = "5" } })
+                @Html.ValidationMessageFor(model => model.LicenseKeyMulti, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="SerialDiv" style="display:none;">
+            @Html.LabelFor(model => model.Serial, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.EditorFor(model => model.Serial, new { htmlAttributes = new { @id = "Serial", @class = "form-control form-control-sm removewhitespace", @maxlength = "2000", @rows = "8" } })
+                @Html.ValidationMessageFor(model => model.Serial, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="UserDiv" style="display:none;">
+            @Html.LabelFor(model => model.AssignedUser, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.AssignedUserId, new SelectList(Model.Users, "UserId", "NameWithUserName"), "Please Select", new { @id = "User", @class = "form-control border selectpicker" })
+                @Html.ValidationMessageFor(model => model.AssignedUserId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="LocationDiv" style="display:none;">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2">Location</label>
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.AssetLocationId, new SelectList(Model.Locations, "Id", "DisplayName"), "Please Select", new { @id = "Location", @required = "true", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AssetLocationId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="BuildingDiv" style="display:none;">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2">Building</label>
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.AssetBuildingId, new SelectList(Model.Buildings, "Id", "DisplayName"), "Please Select", new { @id = "Building", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AssetBuildingId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="RoomDiv" style="display:none;">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2">Room</label>
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.AssetRoomId, new SelectList(Model.Rooms, "Id", "DisplayName"), "Please Select", new { @id = "Room", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AssetRoomId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="AssetDiv" style="display:none;">
+            @Html.LabelFor(model => model.AssignedAsset, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.AssignedAssetId, new SelectList(Model.Assets, "Id", "SerialandAssignedUser"), "Please Select", new { @id = "Asset", @class = "form-control border selectpicker" })
+                @Html.ValidationMessageFor(model => model.AssignedAssetId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-offset-2 col-md-4">
+                @if (!string.IsNullOrEmpty(Model.PreviousUrl))
+                {
+                    <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "InvoiceItem", null, new { @class = "btn btn-secondary" })
+                }
+                <input id="btn-submit" type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<div class="modal fade" id="InvoiceModal" tabindex="-1" role="dialog" aria-labelledby="InvoiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="InvoiceModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @id = "InvoiceForm" }))
+            {
+                <div class="modal-body">
+
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Invoice.Id, new { @id = "InvoiceId" })
+                    @Html.HiddenFor(model => model.Invoice.PONumberOriginal, new { @id = "PONumberOriginal" })
+                    @Html.HiddenFor(model => model.Invoice.SupplierIdOriginal, new { @id = "SupplierIdOriginal" })
+                    @Html.HiddenFor(model => model.Invoice.SupplierDisplayNameOriginal, new { @id = "SupplierDisplayNameOriginal" })
+
+                    <div class="form-group was-validated" id="PONumberDiv">
+                        @Html.LabelFor(model => model.Invoice.PONumber, htmlAttributes: new { @class = "col-form-label" })
+                        <div>
+                            @Html.EditorFor(model => model.Invoice.PONumber, new { htmlAttributes = new { @id = "PONumber", @class = "form-control", @maxlength = "25", @required = "true", @pattern = "^[a-zA-Z0-9_-]*$" } })
+                            @Html.ValidationMessageFor(model => model.Invoice.PONumber, "", new { @id = "Val_PONumber", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group was-validated" id="SupplierDiv">
+                        @Html.LabelFor(model => model.Invoice.Supplier, htmlAttributes: new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.Invoice.SupplierId, new SelectList(Model.Suppliers, "Id", "DisplayName"), "Please Select", new { @id = "Supplier", @class = "form-control", @required = "true" })
+                            @Html.ValidationMessageFor(model => model.Invoice.SupplierId, "", new { @id = "Val_SupplierId", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group was-validated" id="TotalPriceDiv">
+                        @Html.LabelFor(model => model.Invoice.TotalPrice, htmlAttributes: new { @class = "control-label" })
+                        <div>
+                            @Html.EditorFor(model => model.Invoice.TotalPrice, new { htmlAttributes = new { @id = "TotalPrice", @class = "form-control", placeholder = "0.00", min = "0", max = "1000000", @maxlength = "9", @required = "true", @pattern = "^\\d{0,6}(\\.\\d{2,2})?$" } })
+                            @Html.ValidationMessageFor(model => model.Invoice.TotalPrice, "", new { @id = "Val_TotalPrice", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group was-validated" id="PurchaseDateDiv">
+                        @Html.LabelFor(model => model.Invoice.PurchaseDate, htmlAttributes: new { @class = "control-label" })
+                        <div>
+                            @Html.EditorFor(model => model.Invoice.PurchaseDate, new { htmlAttributes = new { @id = "PurchaseDate", @class = "form-control", placeholder = "Select Date", @required = "true", @type = "date" } })
+                            @Html.ValidationMessageFor(model => model.Invoice.PurchaseDate, "", new { @id = "Val_PurchaseDate", @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" style="display:none;" id="CreateInvoice">Create</button>
+                    <button type="button" class="btn btn-primary" style="display:none;" id="EditInvoice">Save</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            style: 'btn-light, text-dark',
+            size: 10,
+            dropupAuto: true,
+        });
+
+        $(function () {
+            Common.DatePicker();
+            Common.RemoveWhiteSpace();
+
+            InvoiceItem.InvoiceItemsHardwareSoftware();
+            InvoiceItem.InvoiceItemsLicenseTypes(null, null);
+            InvoiceItem.UpdateLocation("../Asset/GetUserDefaultLocation");
+
+            InvoiceItem.GetAssetCategories("../Asset/Categories");
+            InvoiceItem.GetManufacturers("../Asset/Manufacturers");
+            InvoiceItem.GetProducts("../Asset/Products");
+            InvoiceItem.GetBuildings("../Asset/Buildings");
+            InvoiceItem.GetRooms("../Asset/Rooms");
+
+            Invoice.GetBlankInvoice("../");
+            Invoice.GetInvoice("../InvoiceItem/EditInvoice");
+            Invoice.CreateInvoice("../InvoiceItem/CreateInvoice");
+            Invoice.EditInvoice("../InvoiceItem/EditInvoice");
+
+            Common.DisableEnableSubmit("#InvoiceItemForm");
+            Invoice.DisableEnableSubmit("#InvoiceForm");
+        });
+
+    </script>
+
+}

@@ -1,0 +1,41 @@
+﻿<div class="modal fade" id="AssetListModal" tabindex="-1" role="dialog" aria-labelledby="AssetListModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AssetListModalLabel"></h5>
+                <small style="margin-top:8px" id="AssetListModalCount"></small>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            @using (Html.BeginForm("", "", FormMethod.Post, new { @Id = "AssetListForm" }))
+            {
+                <div class="modal-body">
+
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="Ids" name="AssetIds" />
+                    <input type="hidden" id="AssetTypeName" name="AssetTypeName" />
+
+                    <div class="form-group" id="ListDiv">
+                        <label class="col-form-label">List Name</label>
+                        <div>
+                            <select name="Id" id="ListId" class="form-control"></select>
+                            @Html.ValidationMessage("Id", "", new { @id = "Val_Id", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btn-add" style="display:none;">Add</button>
+                    <button type="button" class="btn btn-primary" id="btn-remove" style="display:none;">Remove</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+

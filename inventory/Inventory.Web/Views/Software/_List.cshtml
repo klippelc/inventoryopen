@@ -1,0 +1,77 @@
+﻿@model PagedList.IPagedList<Inventory.Web.ViewModels.PagedListVM>
+
+@foreach (var item in Model.Select(x => x.Assets).FirstOrDefault())
+{
+<tr class="@(item.AssetStatusGroup != "Active" ? "text-danger" : "")">
+    @if ((User.Identity.IsAuthenticated) && ((User.IsInRole("SoftwareEdit")) || (User.IsInRole("ManageParkAssets"))))
+    {
+        <td class="text-center d-print-none">
+            @if (item.showCheckBox == true)
+            {
+                @Html.CheckBox("checkSingle", false, new { @Class = "checkSingle", @Value = item.Id })
+            }
+            else
+            {
+                @Html.CheckBox("checkSingle", false, new { disabled = "true" })
+
+            }
+        </td>
+    }
+    <td class="text-break text-center d-print-none">
+        @Html.ActionLink(" ", "Index", "Software", new { assetCategory = item.InvoiceItem.AssetCategory.Name, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId }, new { @Class = item.InvoiceItem.AssetCategory.IconCss + " text-decoration-none", @Title = item.InvoiceItem.AssetCategory.Name })
+    </td>
+    <td class="text-break text-center d-print-none">
+        @Html.ActionLink(" ", "Index", "Software", new { licenseType = item.InvoiceItem.LicenseType.Name, assetCategory = ViewBag.AssetCategory, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId }, new { @Class = item.InvoiceItem.LicenseType.IconCss + " text-decoration-none", @Title = item.InvoiceItem.LicenseType.Name })
+    </td>
+    <td class="text-break d-none d-sm-none d-md-none d-lg-none d-xl-table-cell d-print-table-cell">
+        @Html.DisplayFor(modelItem => item.InvoiceItem.Manufacturer.DisplayName)
+    </td>
+    <td class="text-break d-table-cell d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+        @Html.DisplayFor(modelItem => item.InvoiceItem.Product.DisplayName)
+    </td>
+
+    <td class="d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+        @Html.DisplayFor(modelItem => item.LicenseKeyDisplay)
+    </td>
+    <td class="@(item.AssignedUser != null && item.AssignedUser.Active ? "text-break" : "text-break text-danger") d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell" title="@(item.AssignedUser.UserName)">
+        @Html.DisplayFor(modelItem => item.AssignedUser.LastNameFirstName)
+    </td>
+    <td class="d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+        @Html.DisplayFor(modelItem => item.AssignedAsset.Serial)
+    </td>
+    <td class="d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+        @Html.DisplayFor(modelItem => item.AssignedAsset.Location.Code)
+    </td>
+    <td class="text-center d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-none">
+        @Html.ActionLink(item.InvoiceAndInvoiceItem, "Index", "InvoiceItem", new { InvoiceItemId = item.InvoiceItemId }, new { @Title = "InvoiceItem", @class = "text-decoration-none" })
+    </td>
+    <td class="one text-center">
+        @Html.DisplayFor(modelItem => item.Status.Name)
+    </td>
+    <td class="two text-center d-print-none">
+        <span style="color: @item.Status.ColorCss"><i class="@item.Status.IconCss" title="@item.Status.Name"></i></span>
+    </td>
+    <td class="d-print-none text-center">
+        <div class="btn-group">
+            @if ((User.Identity.IsAuthenticated) && (User.IsInRole("SoftwareEdit")))
+            {
+                <a href="@Url.Action("Edit", "Software", new { id = item.Id })" class="btn-sm btn-light">
+                    <i class="fa fa-edit"></i>
+                </a>
+            }
+            @if ((User.Identity.IsAuthenticated) && ((User.IsInRole("SoftwareView")) || (User.IsInRole("ManageParkAssets"))))
+            {
+                <a href="@Url.Action("Details", "Software", new { id = item.Id })" class="btn-sm btn-light">
+                    <i class="fa fa-list"></i>
+                </a>
+            }
+            @if ((User.Identity.IsAuthenticated) && (User.IsInRole("SoftwareDelete")))
+            {
+                <a href="@Url.Action("Delete", "Software", new { id = item.Id })" class="btn-sm btn-light">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+            }
+        </div>
+    </td>
+</tr>
+}

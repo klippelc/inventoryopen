@@ -1,0 +1,114 @@
+﻿@model Inventory.Web.ViewModels.ManufacturerVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @id = "EditManu" }))
+
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Edit - @ViewBag.AssetType</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.OriginalName)
+        @Html.HiddenFor(model => model.OriginalDisplayName)
+        @Html.HiddenFor(model => model.PreviousUrl)
+
+        <div class="form-group row was-validated" id="NameDiv">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "Name", @class = "form-control", @maxlength = "50", @required = "true", @pattern = "^[a-zA-Z0-9' '_/&.-]*$" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="DisplayNameDiv">
+            @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @id = "DisplayName", @class = "form-control", @maxlength = "50", @pattern = "^[a-zA-Z0-9' '_/&.-]*$" } })
+                @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="DescriptioneDiv">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @id = "Description", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="SupportEmailDiv">
+            @Html.LabelFor(model => model.SupportEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.SupportEmail, new { htmlAttributes = new { @id = "SupportEmail", @class = "form-control", @maxlength = "75" } })
+                @Html.ValidationMessageFor(model => model.SupportEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="SupportPhoneDiv">
+            @Html.LabelFor(model => model.SupportPhone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.SupportPhone, new { htmlAttributes = new { @id = "Phone", @class = "form-control", @minlength = "11" } })
+                @Html.ValidationMessageFor(model => model.SupportPhone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="SupportUrlDiv">
+            @Html.LabelFor(model => model.SupportUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.SupportUrl, new { htmlAttributes = new { @id = "SupportUrl", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.SupportUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ActiveDiv">
+            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.DropDownListFor(model => model.Active, new SelectList(CustomExtensions.Statuses, "Value", "Text"), null, new { @id = "Active", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @maxlength = "500", @rows = "5" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="HardwareDiv">
+            <div class="col-md-offset-2 col-md-4">
+                @if (!string.IsNullOrEmpty(Model.PreviousUrl) && !Model.PreviousUrl.Contains("Details"))
+                {
+                    <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "Manufacturer", null, new { @class = "btn btn-secondary" })
+                }
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+
+    </div>
+    }
+</div>
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(function () {
+            Common.PhoneFormat();
+        });
+    </script>
+
+}

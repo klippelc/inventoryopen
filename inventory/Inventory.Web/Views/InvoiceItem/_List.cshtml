@@ -1,0 +1,74 @@
+﻿@model PagedList.IPagedList<Inventory.Web.ViewModels.PagedListVM>
+
+@{
+    var assetStatuses = Model.Select(x => x.AssetStatuses).FirstOrDefault();
+    var InActiveId = assetStatuses.Where(s => s.Name == "InActive").Select(s => s.Id).FirstOrDefault();
+    var assignedId = assetStatuses.Where(s => s.Name == "Assigned").Select(s => s.Id).FirstOrDefault();
+    var sharedId = assetStatuses.Where(s => s.Name == "Shared").Select(s => s.Id).FirstOrDefault();
+    var availableId = assetStatuses.Where(s => s.Name == "Available").Select(s => s.Id).FirstOrDefault();
+}
+
+@foreach (var item in Model.Select(x => x.InvoiceItems).FirstOrDefault())
+{
+
+    <tr>
+        <td class="text-center d-table-cell d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-none">
+            @Html.ActionLink(" ", "Index", "InvoiceItem", new { AssetType = item.AssetType.Name, currentFilter = ViewBag.CurrentFilter, InvoiceId = ViewBag.InvoiceId }, new { @Class = item.AssetType.IconCss + " text-decoration-none", @Title = item.AssetType.Name })
+        </td>
+        <td class="text-center d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-none">
+            @Html.ActionLink(" ", "Index", "InvoiceItem", new { AssetCategory = item.AssetCategory.Name, AssetType = ViewBag.AssetTypeDesc, currentFilter = ViewBag.CurrentFilter, InvoiceId = ViewBag.InvoiceId }, new { @Class = item.AssetCategory.IconCss + " text-decoration-none", @Title = item.AssetCategory.Name })
+        </td>
+        <td class="text-break d-none d-sm-none d-md-none d-lg-none d-xl-table-cell d-print-table-cell">
+            @Html.DisplayFor(modelItem => item.Invoice.PONumber)
+        </td>
+        <td class="text-break d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+            @Html.DisplayFor(modelItem => item.Manufacturer.DisplayName)
+        </td>
+        <td class="text-break">
+            @Html.DisplayFor(modelItem => item.Product.DisplayName)
+        </td>
+        <td class="text-break text-center">
+            @Html.ActionLink(item.Quantity.ToString(), "Index", item.AssetTypeName, new { invoiceItemId = item.Id }, new { @Title = "Total", @class = "text-decoration-none" })
+        </td>
+        <td class="text-break text-center d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+            @Html.ActionLink(item.InActive.ToString(), "Index", item.AssetTypeName, new { invoiceItemId = item.Id, activeStatus = InActiveId }, new { @Title = "InActive", @class = "text-decoration-none" })
+        </td>
+        <td class="text-break text-center d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+            @Html.ActionLink(item.Assigned.ToString(), "Index", item.AssetTypeName, new { invoiceItemId = item.Id, activeStatus = assignedId }, new { @Title = "Assigned", @class = "text-decoration-none" })
+        </td>
+        <td class="text-break text-center d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+            @Html.ActionLink(item.Shared.ToString(), "Index", item.AssetTypeName, new { invoiceItemId = item.Id, activeStatus = sharedId }, new { @Title = "Shared", @class = "text-decoration-none" })
+        </td>
+        <td class="text-break text-center d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+            @Html.ActionLink(item.Available.ToString(), "Index", item.AssetTypeName, new { invoiceItemId = item.Id, activeStatus = availableId }, new { @Title = "Available", @class = "text-decoration-none" })
+        </td>
+        <td class="text-break text-center d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+            @Html.DisplayFor(modelItem => item.UnitPrice)
+        </td>
+        <td class="text-break text-center">
+            @Html.DisplayFor(modelItem => item.InvoiceNumberAndItemNumber)
+        </td>
+        <td class="d-print-none text-center">
+            <div class="btn-group">
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoiceItemsEdit")))
+                {
+                    <a href="@Url.Action("Edit", "InvoiceItem", new { id = item.Id })" class="btn-sm btn-light">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                }
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoiceItemsView")))
+                {
+                    <a href="@Url.Action("Details", "InvoiceItem", new { id = item.Id })" class="btn-sm btn-light">
+                        <i class="fa fa-list"></i>
+                    </a>
+                }
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoiceItemsDelete")))
+                {
+                    <a href="@Url.Action("Delete", "InvoiceItem", new { id = item.Id })" class="btn-sm btn-light">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                }
+            </div>
+        </td>
+    </tr>
+}

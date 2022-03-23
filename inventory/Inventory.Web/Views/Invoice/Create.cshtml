@@ -1,0 +1,78 @@
+﻿@model Inventory.Web.ViewModels.InvoiceVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @id = "Invoice" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal was-validated">
+            <h4>Create - @ViewBag.PageName</h4>
+            <hr />
+            @Html.HiddenFor(m => m.Id, new { @id = "Id" })
+            @Html.HiddenFor(model => model.PreviousUrl)
+
+
+            <div class="form-group row" id="PONumberDiv">
+                @Html.LabelFor(model => model.PONumber, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.PONumber, new { htmlAttributes = new { @id = "PONumber", @class = "form-control", @maxlength = "25", @required = "true", @pattern = "^[a-zA-Z0-9_-]*$" } })
+                    @Html.ValidationMessageFor(model => model.PONumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group row" id="SupplierDiv">
+                @Html.LabelFor(model => model.Supplier, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+                <div class="col-md-5">
+                    @Html.DropDownListFor(model => model.SupplierId, new SelectList(Model.Suppliers, "Id", "DisplayName"), "Please Select", new { @id = "Supplier", @class = "form-control", @required = "true" })
+                    @Html.ValidationMessageFor(model => model.SupplierId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group row" id="TotalPriceDiv">
+                @Html.LabelFor(model => model.TotalPrice, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.TotalPrice, new { htmlAttributes = new { @id = "TotalPrice", @class = "form-control", placeholder = "0.00", min = "0", max = "1000000", @maxlength = "9", @required = "true", @pattern = "^\\d{0,6}(\\.\\d{2,2})?$" } })
+                    @Html.ValidationMessageFor(model => model.TotalPrice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group row" id="PurchaseDateDiv">
+                @Html.LabelFor(model => model.PurchaseDate, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.PurchaseDate, new { htmlAttributes = new { @id = "PurchaseDate", @class = "form-control", placeholder = "Select Date", @required = "true", @type = "date" } })
+                    @Html.ValidationMessageFor(model => model.PurchaseDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-offset-2 col-md-4">
+                    @if (!string.IsNullOrEmpty(Model.PreviousUrl))
+                    {
+                        <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Back to List", "Index", "Invoice", null, new { @class = "btn btn-secondary" })
+                    }
+                    <input id="btn-submit" type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(function () {
+            Common.DatePicker();
+            Common.DisableEnableSubmit("#Invoice");
+        });
+    </script>
+
+}

@@ -1,0 +1,174 @@
+﻿@model Inventory.Web.ViewModels.BuildingVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Create - @ViewBag.AssetType</h4>
+        <hr />
+        @Html.HiddenFor(m => m.Id, new { @id = "Id" })
+        @Html.HiddenFor(model => model.PreviousUrl)
+        @Html.HiddenFor(model => model.LocationPropertyId)
+
+        <div class="form-group row was-validated" id="LocationDiv">
+            @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.LocationId, new SelectList(Model.Locations, "Id", "DisplayName"), "Please Select", new { @id = "Location", @class = "form-control", @required = "true" })
+                @Html.ValidationMessageFor(model => model.LocationId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="PropertyIdDiv">
+            @Html.LabelFor(model => model.PropertyId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.PropertyId, new { htmlAttributes = new { @id = "PropertyId", @type = "text", @class = "form-control", @minlength = "4", @maxlength = "4" } })
+                @Html.ValidationMessageFor(model => model.PropertyId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="NameDiv">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "Name", @class = "form-control", @maxlength = "100", @required = "true", @pattern = "^[a-zA-Z0-9' '_/&.-]*$" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="DisplayNameDiv">
+            @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @id = "DisplayName", @class = "form-control", @maxlength = "100", @pattern = "^[a-zA-Z0-9' '_/&.-]*$" } })
+                @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="CodeDiv">
+            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @id = "Code", @class = "form-control", @maxlength = "2" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="DescriptioneDiv">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @id = "Description", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="PhoneDiv">
+            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @id = "Phone", @class = "form-control", @minlength = "11" } })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="AddressLine1Div">
+            @Html.LabelFor(model => model.AddressLine1, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.AddressLine1, new { htmlAttributes = new { @id = "AddressLine1", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.AddressLine1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="AddressLine2Div">
+            @Html.LabelFor(model => model.AddressLine2, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.AddressLine2, new { htmlAttributes = new { @id = "AddressLine2", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.AddressLine2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="CityDiv">
+            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.CityId, new SelectList(Model.Cities, "Id", "Name"), "Please Select", new { @id = "City", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="StateDiv">
+            @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.StateId, new SelectList(Model.States, "Id", "Name"), null, new { @id = "State", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="PostalCodeDiv">
+            @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @id = "PostalCode", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LongitudeDiv">
+            @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @id = "Longitude", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.Longitude, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LatitudeDiv">
+            @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @id = "Latitude", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ActiveDiv">
+            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.DropDownListFor(model => model.Active, new SelectList(CustomExtensions.Statuses, "Value", "Text"), null, new { @id = "Active", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @maxlength = "500", @rows = "5" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-offset-2 col-md-4">
+                @if (!string.IsNullOrEmpty(Model.PreviousUrl))
+                {
+                    <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "Building", null, new { @class = "btn btn-secondary" })
+                }
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(function () {
+            Common.PhoneFormat();
+        });
+    </script>
+
+}
+

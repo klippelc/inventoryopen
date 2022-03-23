@@ -1,0 +1,105 @@
+﻿@model PagedList.IPagedList<Inventory.Web.ViewModels.SupplierVM>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+    var TotalItems = String.Format("{0:N0}", Model.TotalItemCount);
+}
+
+<style>
+    .pagination {
+        margin: 0px;
+    }
+
+    /*.bg-info {
+        color:blue;
+    }*/
+</style>
+
+<div class="container maxwidth">
+    <h2>@(ViewBag.AssetType)s</h2>
+
+    @using (Html.BeginForm("Index", null, FormMethod.Get))
+    {
+        <div class="row mb-0">
+            <div class="col-md-5 col-lg-4" style="padding-bottom:5px;">
+                @Html.ActionLink("Create New", "Create", "Supplier", null, new { @class = "btn btn-primary btn-sm" })
+                <font class="small align-bottom">Total Items: @TotalItems</font>
+            </div>
+            <div class="col-md-7 col-lg-8 form-inline text-md-right text-lg-right d-sm-table d-md-table d-lg-table d-xl-table d-print-none pb-1">
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control form-control-sm ", @placeholder = "Search", @style = "width: 200px;", @maxlength = "30" })
+                <input type="submit" value="Search" class="btn btn-secondary btn-sm" style="margin-left:5px;" />
+            </div>
+        </div>
+    }
+</div>
+
+<div class="container maxwidth">
+
+    <table class="table table-striped table-bordered" style="vertical-align:middle;">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 50px;" class="d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Id", "Index", new { sortOrder = ViewBag.IdSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Id" })
+                </th>
+                <th scope="col" class="w-auto">
+                    @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.DisplayNameSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Supplier" })
+                </th>
+                <th scope="col" class="w-auto">
+                    @Html.ActionLink("Phone", "Index", new { sortOrder = ViewBag.PhoneSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Phone" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-none d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Email", "Index", new { sortOrder = ViewBag.EmailSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Email" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-none d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Url", "Index", new { sortOrder = ViewBag.UrlSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Url" })
+                </th>
+                <th scope="col" style="width: 100px;" class="d-print-none"></th>
+            </tr>
+        </thead>
+        <tbody class="align-text-bottom">
+            @foreach (var item in Model)
+            {
+            <tr class="@(item.Active == false ? "text-danger" : "")">
+                <td class="d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td class="text-break">
+                    @Html.DisplayFor(modelItem => item.DisplayName)
+                </td>
+                <td class="text-break">
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td class="text-break d-none d-sm-none d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td class="text-break d-none d-sm-none d-md-none d-lg-none d-xl-table-cell d-print-table-cell">
+                    @Html.DisplayFor(modelItem => item.Url)
+                </td>
+                <td class="text-center d-print-none">
+                    <div class="btn-group">
+                        <a href="@Url.Action("Edit", ViewBag.AssetType, new { id = item.Id })" class="btn-sm btn-light">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Details", ViewBag.AssetType, new { id = item.Id })" class="btn-sm btn-light">
+                            <i class="fa fa-list"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", ViewBag.AssetType, new { id = item.Id })" class="btn-sm btn-light">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="row mb-1">
+        <div class="col-sm-4" style="margin-bottom:5px;">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        </div>
+        <div class="col-sm-8 form-inline text-right">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+        </div>
+    </div>
+</div>

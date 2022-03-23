@@ -1,0 +1,42 @@
+﻿<div class="modal fade" id="ConfirmAssetModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmAssetModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ConfirmAssetModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            @using (Html.BeginForm("", "", FormMethod.Post, new { @Id = "ConfirmAssetForm" }))
+            {
+                <div class="modal-body">
+
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="AssetId" name="AssetId" />
+                    <input type="hidden" id="UserId" name="UserId" />
+
+                    <div class="form-group" id="ListDiv">
+                        <div>
+                            <font class="font-weight-bold">Please confirm you have the following Asset.</font>
+                        </div>
+                        <div class="mt-1">
+                            <font id="Description"></font>
+                        </div>
+                        <div class="mt-3">
+                            <font class="h6">If you do not have this asset in your possession, please submit a ticket to selfhelp@broward.org</font>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btn-add" style="display:none;">Yes, I Confirm</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+

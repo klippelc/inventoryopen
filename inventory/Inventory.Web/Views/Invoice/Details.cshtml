@@ -1,0 +1,77 @@
+﻿@model Inventory.Web.ViewModels.InvoiceVM
+
+@{
+    ViewBag.Title = ViewBag.PageName;
+}
+
+<div class="container">
+
+    <div class="form-horizontal">
+        <h4>Details - @ViewBag.PageName</h4>
+        <hr>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.PONumber, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.PONumber)
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.Supplier, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.SupplierName)
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.InvoiceItemsCount, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.ActionLink(Model.InvoiceItemsCount.ToString(), "Index", "InvoiceItem", new { invoiceId = Model.Id }, new { @class = "text-decoration-none" })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.InvoiceItemsTotal, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-3">
+                @Html.DisplayFor(model => model.InvoiceItemsTotal)
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.TotalPrice, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-3">
+                @Html.DisplayFor(model => model.TotalPrice)
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.PurchaseDate, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-3">
+                @(Model.PurchaseDate?.ToString("MM/dd/yyyy"))
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    @if (!string.IsNullOrEmpty(Model.PreviousUrl))
+    {
+        <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Index", "Invoice", null, new { @class = "btn btn-secondary" })
+    }
+
+    @if (TempData["AssetCreated"] != null)
+    {
+        @Html.ActionLink("Add Another " + TempData["AssetCreated"], "Create", new { previousUrl = Model.PreviousUrl }, new { @class = "btn btn-primary" })
+    }
+    @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesEdit")))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id, previousUrl = Model.PreviousUrl }, new { @class = "btn btn-primary" })
+    }
+</div>
+
+<br>

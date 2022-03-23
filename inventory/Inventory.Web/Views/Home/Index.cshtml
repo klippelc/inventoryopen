@@ -1,0 +1,57 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+    //var LastAdded = @Model.FirstOrDefault();
+    //var LastModified = @Model.OrderByDescending(d => d.DateModified).FirstOrDefault();
+    //var AssetTotal = @String.Format("{0:N0}", Model.Where(t => t.InvoiceItem != null && t.InvoiceItem.AssetType != null && (t.InvoiceItem.AssetType.Name == "Hardware" || t.InvoiceItem.AssetType.Name == "Software")).Count());
+    //var HardwareTotal = @String.Format("{0:N0}", Model.Where(t => t.InvoiceItem != null && t.InvoiceItem.AssetType != null && t.InvoiceItem.AssetType.Name == "Hardware").Count());
+    //var SoftwareTotal = @String.Format("{0:N0}", Model.Where(t => t.InvoiceItem != null && t.InvoiceItem.AssetType != null && t.InvoiceItem.AssetType.Name == "Software").Count());
+}
+
+@*<div class="container">
+
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Active</h2>
+                <p></p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+            </div>
+            <div class="col-md-4">
+                <h2>Surplus</h2>
+                <p></p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+            </div>
+            <div class="col-md-4">
+                <h2>Removed</h2>
+                <p></p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+            </div>
+        </div>
+
+        <hr>
+    </div>*@
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Asset Inventory</h4>
+            <p class="lead">There are @String.Format("{0:N0}", Model.AssetCount) assets in the database.</p>
+            <p class="lead">@String.Format("{0:N0}", Model.HardwareCount) - Hardware, @String.Format("{0:N0}", Model.SoftwareCount) - Software.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>About Us</h4>
+            <p class="lead">The Information Technology (IT) group is responsible for providing IT technical expertise, support, and training to all Division employees.</p>
+        </div>
+    </div>
+    <hr>
+</div>
+
+<footer class="container">
+    <p>&copy; Inventory</p>
+</footer>

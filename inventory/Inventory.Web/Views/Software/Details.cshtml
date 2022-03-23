@@ -1,0 +1,238 @@
+﻿@model Inventory.Web.ViewModels.AssetVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    <div class="form-horizontal">
+        <h4>Details - @ViewBag.AssetType</h4>
+        <hr>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.PONumber, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesView")))
+                {
+                    @Html.ActionLink(Model.PONumber, "Index", "Invoice", new { SearchString = Model.PONumber }, new { @class = "text-decoration-none" })
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.PONumber)
+                }
+            </div>
+        </div>
+
+        <div class="form-group row" id="InvoiceItemNoDiv">
+            @Html.LabelFor(model => model.InvoiceAndInvoiceItem, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesItemsView")))
+                {
+                    @Html.ActionLink(Model.InvoiceAndInvoiceItem, "Index", "InvoiceItem", new { SearchString = Model.InvoiceAndInvoiceItem }, new { @class = "text-decoration-none" })
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.InvoiceAndInvoiceItem)
+                }
+            </div>
+        </div>
+
+        <div class="form-group row" id="CategoryDiv">
+            @Html.LabelFor(model => model.AssetCategoryName, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.AssetCategoryName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ManuDiv">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Manufacturer</label>
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.ManufacturerName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ProductDiv">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Product</label>
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.ProductName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="DateReceivedDiv">
+            @Html.LabelFor(model => model.DateReceived, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @(Model.DateReceived?.ToString("MM/dd/yyyy"))
+            </div>
+        </div>
+
+        <div class="form-group row" id="LicenseTypeDiv">
+            @Html.LabelFor(model => model.LicenseTypeName, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.LicenseTypeName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="LicenseDiv">
+            @Html.LabelFor(model => model.LicenseKeyDisplay, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.LicenseKeyDisplay)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ExpirationDateDiv" style="@(Model.InvoiceItem.LicenseType.Name == "User" ? "" : "display:none")">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Expiration Date</label>
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.ExpirationDate)
+            </div>
+        </div>
+
+        <div class="form-group row" id="SupplierDiv">
+            @Html.LabelFor(model => model.SupplierName, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.SupplierName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="UnitPriceDiv">
+            @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.UnitPrice)
+            </div>
+        </div>
+
+        <div class="form-group row" id="PurchaseDateDiv">
+            @Html.LabelFor(model => model.PurchaseDate, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.PurchaseDate)
+            </div>
+        </div>
+
+        <div class="form-group row" id="StatusDiv">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.AssetStatusName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="SpecsDiv">
+            @Html.LabelFor(model => model.InvoiceItem.Specifications, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.InvoiceItem.Specifications)
+            </div>
+        </div>
+
+        <div class="form-group row" id="AssignedAssetDiv" style="@(Model.InvoiceItem.LicenseType.Name != "User" ? "" : "display:none")">
+            @Html.LabelFor(model => model.AssignedAsset, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5 @((Model.AssignedAsset != null && Model.AssignedAsset.Status != null && Model.AssignedAsset.Status.Group == "Active") ? "text-break" : "text-break text-danger")">
+                @Html.DisplayFor(model => model.AssignedAsset.SerialandAssignedUser)
+            </div>
+        </div>
+
+        <div class="form-group row" id="AssignedUserDiv" style="@(Model.InvoiceItem.LicenseType.Name == "User" ? "" : "display:none")">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">
+                Assigned User
+                <a class="text-decoration-none text-secondary" data-toggle="collapse" href="#collapseUser" role="button" aria-expanded="false" aria-controls="collapseUser">
+                    <i class="fas fa-lg fa-user"></i>
+                </a>
+            </label>
+            <div class="col-md-5 @(Model.AssignedUser.Active ? "text-break" : "text-break text-danger")">
+                @Html.DisplayFor(model => model.AssignedUserName)
+            </div>
+        </div>
+
+        <div id="collapseUser" class="collapse">
+            <div class="form-group row" id="AssignedUserNameDiv" style="@((Model.InvoiceItem.LicenseType.Name == "User" && Model.AssignedUserId != null) ? "" : "display:none")">
+                <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Assigned UserName</label>
+                <div class="col-md-5 @(Model.AssignedUser.Active ? "text-break" : "text-break text-danger")">
+                    @Html.DisplayFor(model => model.AssignedUser.UserName)
+                </div>
+            </div>
+
+            <div class="form-group row" id="AssignedUserTitleDiv" style="@((Model.InvoiceItem.LicenseType.Name == "User" && Model.AssignedUserId != null) ? "" : "display:none")">
+                <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Assigned Title</label>
+                <div class="col-md-5 @(Model.AssignedUser.Active ? "text-break" : "text-break text-danger")">
+                    @Html.DisplayFor(model => model.AssignedUser.Title)
+                </div>
+            </div>
+
+            <div class="form-group row" id="AssignedUserParkDiv" style="@((Model.InvoiceItem.LicenseType.Name == "User" && Model.AssignedUserId != null) ? "" : "display:none")">
+                <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Assigned Park</label>
+                <div class="col-md-5 @(Model.AssignedUser.Active ? "text-break" : "text-break text-danger")">
+                    @Html.DisplayFor(model => model.AssignedUser.Park)
+                </div>
+            </div>
+
+            <div class="form-group row" id="AssignedUserPhoneDiv" style="@((Model.InvoiceItem.LicenseType.Name == "User" && Model.AssignedUserId != null) ? "" : "display:none")">
+                <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Assigned Phone</label>
+                <div class="col-md-5 @(Model.AssignedUser.Active ? "text-break" : "text-break text-danger")">
+                    @Html.DisplayFor(model => model.AssignedUser.Phone)
+                </div>
+            </div>
+
+            <div class="form-group row" id="AssignedUserMobileDiv" style="@((Model.InvoiceItem.LicenseType.Name == "User" && Model.AssignedUserId != null) ? "" : "display:none")">
+                <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Assigned Cell</label>
+                <div class="col-md-5 @(Model.AssignedUser.Active ? "text-break" : "text-break text-danger")">
+                    @Html.DisplayFor(model => model.AssignedUser.MobilePhone)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-5">
+                @Html.DisplayFor(model => model.Notes)
+            </div>
+        </div>
+
+        @if ((User.Identity.IsAuthenticated) && (User.IsInRole("HardwareEdit")))
+        {
+            <div class="form-group row" id="AuditLogsDiv">
+                <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">
+                    Audit Logs
+                    <a class="text-decoration-none text-secondary" data-toggle="collapse" href="#collapseLogs" role="button" aria-expanded="false" aria-controls="collapseLogs">
+                        <i class="far fa-lg fa-clipboard"></i>
+                    </a>
+                </label>
+                <div class="col-md-5 text-break">
+                </div>
+            </div>
+
+            <div id="collapseLogs" class="collapse">
+
+                @if (Model.AuditLogs != null)
+                {
+                    foreach (var item in @Model.AuditLogs.OrderByDescending(x => x.DateModified))
+                    {
+                        <div class="form-group row" id="AuditLogDiv">
+                            <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold small">@Html.DisplayFor(model => item.OperationAndDate)</label>
+                            <div class="col-md-5 text-break small">
+                                @Html.DisplayFor(model => item.ChangeSummary)
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+        }
+
+    </div>
+</div>
+
+<div class="container">
+    @if (!string.IsNullOrEmpty(Model.PreviousUrl))
+    {
+        <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Index", "Software", null, new { @class = "btn btn-secondary" })
+    }
+
+    @if ((User.Identity.IsAuthenticated) && (User.IsInRole("SoftwareEdit")))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id, previousUrl = Model.PreviousUrl }, new { @class = "btn btn-primary" })
+    }
+</div>
+
+<br>

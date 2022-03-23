@@ -1,0 +1,128 @@
+﻿@model PagedList.IPagedList<Inventory.Web.ViewModels.RoomVM>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+    var TotalItems = String.Format("{0:N0}", Model.TotalItemCount);
+}
+
+<style>
+    .pagination {
+        margin: 0px;
+    }
+
+    /*.bg-info {
+        color:blue;
+    }*/
+</style>
+
+<div class="container maxwidth">
+    <h2>@(ViewBag.AssetType)s</h2>
+
+    @using (Html.BeginForm("Index", null, FormMethod.Get))
+    {
+        if (ViewBag.LocationId != null)
+        {
+            <input type="hidden" name="LocationId" value="@ViewBag.LocationId" />
+        }
+        if (ViewBag.BuildingId != null)
+        {
+            <input type="hidden" name="BuildingId" value="@ViewBag.BuildingId" />
+        }
+        <div class="row mb-0">
+            <div class="col-md-5 col-lg-4" style="padding-bottom:5px;">
+                @Html.ActionLink("Create New", "Create", "Room", null, new { @class = "btn btn-primary btn-sm" })
+                <font class="small align-bottom">Total Items: @TotalItems</font>
+                <font class="medium align-bottom">|</font>
+                @Html.ActionLink(" ", "ExportToExcel", "Room", new { sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }, new { @Class = "far fa-file-excel text-decoration-none d-print-none", @Style = "vertical-align: -webkit-baseline-middle;", @Title = "Excel" })
+                @Html.ActionLink(" ", "Index", null, new { @Onclick = "window.print();", @Class = "fas fa-print text-decoration-none d-print-none", @Style = "vertical-align: -webkit-baseline-middle;", @Title = "Print" })
+            </div>
+            <div class="col-md-7 col-lg-8 form-inline text-md-right text-lg-right d-sm-table d-md-table d-lg-table d-xl-table d-print-none pb-1">
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control form-control-sm ", @placeholder = "Search", @style = "width: 200px;", @maxlength = "30" })
+                <input type="submit" value="Search" class="btn btn-secondary btn-sm" style="margin-left:5px;" />
+            </div>
+        </div>
+    }
+</div>
+
+<div class="container maxwidth">
+
+    <table class="table table-striped table-bordered" style="vertical-align:middle;">
+        <thead>
+            <tr>
+                <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Location code", "Index", new { locationId = ViewBag.LocationId, buildingId = ViewBag.BuildingId, sortOrder = ViewBag.LocationCodeSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Location" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-table-cell d-md-table-cell d-lg-none d-xl-none d-print-none">
+                    @Html.ActionLink("Location", "Index", new { locationId = ViewBag.LocationId, buildingId = ViewBag.BuildingId, sortOrder = ViewBag.LocationCodeSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Location" })
+                </th>
+                <th scope="col" class="w-auto d-table-cell d-sm-none d-md-none d-lg-none d-xl-none d-print-none">
+                    @Html.ActionLink("Loc", "Index", new { locationId = ViewBag.LocationId, buildingId = ViewBag.BuildingId, sortOrder = ViewBag.LocationCodeSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Location" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Location", "Index", new { locationId = ViewBag.LocationId, buildingId = ViewBag.BuildingId, sortOrder = ViewBag.LocationSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Location" })
+                </th>
+                <th scope="col" class="w-auto">
+                    @Html.ActionLink("Building", "Index", new { locationId = ViewBag.LocationId, buildingId = ViewBag.BuildingId, sortOrder = ViewBag.BuildingSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Building" })
+                </th>
+                <th scope="col" class="w-auto">
+                    @Html.ActionLink("Name", "Index", new { locationId = ViewBag.LocationId, buildingId = ViewBag.BuildingId, sortOrder = ViewBag.RoomSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Room" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Type", "Index", new { locationId = ViewBag.LocationId, buildingId = ViewBag.BuildingId, sortOrder = ViewBag.RoomTypeSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Type" })
+                </th>
+                <th scope="col" style="width: 50px;" class="d-none d-sm-none d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("PID", "Index", new { locationId = ViewBag.LocationId, buildingId = ViewBag.BuildingId, sortOrder = ViewBag.IdSortOrder, currentFilter = ViewBag.CurrentFilter }, new { @Title = "Property Id" })
+                </th>
+                <th scope="col" style="width: 100px;" class="d-print-none"></th>
+            </tr>
+        </thead>
+        <tbody class="align-text-bottom">
+            @foreach (var item in Model)
+            {
+            <tr class="@(item.Active == false ? "text-danger" : "")">
+                <td class="@(item.Building.Location.Active == false ? "text-danger text-break" : "text-break") d-table-cell d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.DisplayFor(modelItem => item.Location.Code)
+                </td>
+                <td class="@(item.Building.Location.Active == false ? "text-danger text-break" : "text-break") d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.DisplayFor(modelItem => item.Location.DisplayName)
+                </td>
+                <td class="@(item.Building.Active == false ? "text-danger text-break" : "text-break")">
+                    @Html.DisplayFor(modelItem => item.Building.DisplayName)
+                </td>
+                <td class="text-break">
+                    @Html.DisplayFor(modelItem => item.DisplayName)
+                </td>
+                <td class="text-break d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.DisplayFor(modelItem => item.RoomType.Name)
+                </td>
+                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.DisplayFor(modelItem => item.PropertyId)
+                </td>
+                <td class="text-center d-print-none">
+                    <div class="btn-group">
+                        <a href="@Url.Action("Edit", ViewBag.AssetType, new { id = item.Id })" class="btn-sm btn-light">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Details", ViewBag.AssetType, new { id = item.Id })" class="btn-sm btn-light">
+                            <i class="fa fa-list"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", ViewBag.AssetType, new { id = item.Id })" class="btn-sm btn-light">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="row mb-1">
+        <div class="col-sm-4" style="margin-bottom:5px;">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        </div>
+        <div class="col-sm-8 form-inline text-right">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, locationId = ViewBag.LocationId, buildingId = ViewBag.BuildingId, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+        </div>
+    </div>
+</div>

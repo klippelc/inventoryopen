@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/ADAuthenticationInternal/ADAuthentication" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/ADAuthenticationInternal/ADAuthentication" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/ADAuthenticationInternal/ADAuthentication">
+      <s:element name="SubmitUserAuthenticationGetUserRoles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ApplicationName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IPAddress" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitUserAuthenticationGetUserRolesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubmitUserAuthenticationGetUserRolesResult" type="tns:UserAuthenticationGetUserRoles" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UserAuthenticationGetUserRoles">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ApplicationName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CommonName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EmployeeID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RoleCount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="RoleList" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasRoles" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsAuthenticated" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasExceptions" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Exception" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SubmitUserAuthentication">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ApplicationName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IPAddress" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitUserAuthenticationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubmitUserAuthenticationResult" type="tns:UserAuthentication" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UserAuthentication">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CommonName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EmployeeID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsAuthenticated" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ApplicationName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasExceptions" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Exception" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SubmitGetUserRoles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ApplicationName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IPAddress" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitGetUserRolesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubmitGetUserRolesResult" type="tns:GetUserRoles" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetUserRoles">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ApplicationName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RoleCount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="RoleList" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasRoles" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CommonName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EmployeeID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasExceptions" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Exception" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SubmitUserAuthenticationGetUserRolesSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitUserAuthenticationGetUserRoles" />
+  </wsdl:message>
+  <wsdl:message name="SubmitUserAuthenticationGetUserRolesSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitUserAuthenticationGetUserRolesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubmitUserAuthenticationSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitUserAuthentication" />
+  </wsdl:message>
+  <wsdl:message name="SubmitUserAuthenticationSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitUserAuthenticationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubmitGetUserRolesSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitGetUserRoles" />
+  </wsdl:message>
+  <wsdl:message name="SubmitGetUserRolesSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitGetUserRolesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ADAuthenticationInternalSoap">
+    <wsdl:operation name="SubmitUserAuthenticationGetUserRoles">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method authenticates the user against Active Directory based on the UserName and Password parameters. This method returns the authentication status, application-related user roles, as well as any errors received. The following parameters are required: UserName, Password, ApplicationName, and IPAddress. All requests and subsequent errors are logged.</wsdl:documentation>
+      <wsdl:input message="tns:SubmitUserAuthenticationGetUserRolesSoapIn" />
+      <wsdl:output message="tns:SubmitUserAuthenticationGetUserRolesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitUserAuthentication">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method authenticates the user against Active Directory based on the UserName and Password parameters. This method returns the authentication status, as well as any errors received. The following parameters are required: UserName, Password, ApplicationName, and IPAddress. All requests and subsequent errors are logged.</wsdl:documentation>
+      <wsdl:input message="tns:SubmitUserAuthenticationSoapIn" />
+      <wsdl:output message="tns:SubmitUserAuthenticationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitGetUserRoles">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns the application-related user roles based on the passed user name and application name, , as well as any errors received. The following parameters are required: UserName, ApplicationName, and IPAddress. All requests and subsequent errors are logged.</wsdl:documentation>
+      <wsdl:input message="tns:SubmitGetUserRolesSoapIn" />
+      <wsdl:output message="tns:SubmitGetUserRolesSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ADAuthenticationInternalSoap" type="tns:ADAuthenticationInternalSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SubmitUserAuthenticationGetUserRoles">
+      <soap:operation soapAction="http://tempuri.org/ADAuthenticationInternal/ADAuthentication/SubmitUserAuthenticationGetUserRoles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitUserAuthentication">
+      <soap:operation soapAction="http://tempuri.org/ADAuthenticationInternal/ADAuthentication/SubmitUserAuthentication" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitGetUserRoles">
+      <soap:operation soapAction="http://tempuri.org/ADAuthenticationInternal/ADAuthentication/SubmitGetUserRoles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ADAuthenticationInternalSoap12" type="tns:ADAuthenticationInternalSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SubmitUserAuthenticationGetUserRoles">
+      <soap12:operation soapAction="http://tempuri.org/ADAuthenticationInternal/ADAuthentication/SubmitUserAuthenticationGetUserRoles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitUserAuthentication">
+      <soap12:operation soapAction="http://tempuri.org/ADAuthenticationInternal/ADAuthentication/SubmitUserAuthentication" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitGetUserRoles">
+      <soap12:operation soapAction="http://tempuri.org/ADAuthenticationInternal/ADAuthentication/SubmitGetUserRoles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ADAuthenticationInternal">
+    <wsdl:port name="ADAuthenticationInternalSoap" binding="tns:ADAuthenticationInternalSoap">
+      <soap:address location="https://devauth01.appdev.cty/adauthenticationinternal/adauthentication.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ADAuthenticationInternalSoap12" binding="tns:ADAuthenticationInternalSoap12">
+      <soap12:address location="https://devauth01.appdev.cty/adauthenticationinternal/adauthentication.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

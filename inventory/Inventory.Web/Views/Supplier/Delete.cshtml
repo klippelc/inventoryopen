@@ -1,0 +1,139 @@
+﻿@model Inventory.Web.ViewModels.SupplierVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    @*<h2>Delete</h2>*@
+    <h4>Are you sure you want to delete this?</h4>
+    <div class="form-horizontal">
+        <h5>Delete - @ViewBag.AssetType</h5>
+        <hr>
+
+        <div class="form-group row" id="WarningDiv">
+            <label class="control-label col-md-6 h6 text-danger">@ViewBag.Warning</label>
+        </div>
+
+        <div class="form-group row" id="NameDiv">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group row" id="DisplayNameDiv">
+            @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.DisplayName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="DescriptionDiv">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Description)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ContactNameDiv">
+            @Html.LabelFor(model => model.ContactName, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.ContactName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="EmailDiv">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Email)
+            </div>
+        </div>
+
+        <div class="form-group row" id="PhoneDiv">
+            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Phone)
+            </div>
+        </div>
+
+        <div class="form-group row" id="UrlDiv">
+            @Html.LabelFor(model => model.Url, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Url)
+            </div>
+        </div>
+
+        <div class="form-group row" id="AddressLine1Div">
+            @Html.LabelFor(model => model.AddressLine1, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AddressLine1)
+            </div>
+        </div>
+
+        <div class="form-group row" id="AddressLine2Div">
+            @Html.LabelFor(model => model.AddressLine2, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AddressLine2)
+            </div>
+        </div>
+
+        <div class="form-group row" id="CityDiv">
+            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.City)
+            </div>
+        </div>
+
+        <div class="form-group row" id="StateDiv">
+            @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.State.Name)
+            </div>
+        </div>
+
+        <div class="form-group row" id="PostalCodeDiv">
+            @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.PostalCode)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ActiveDiv">
+            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.YesNo(Model.Active)
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Notes)
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+
+        if (!string.IsNullOrEmpty(Model.PreviousUrl))
+        {
+            <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+        }
+        else
+        {
+            @Html.ActionLink("Back to List", "Index", "Supplier", null, new { @class = "btn btn-secondary" })
+        }
+        <input type="submit" value="Delete" class="btn btn-primary" disabled="@(Model.InvoiceCount > 0)" />
+
+    }
+</div>
+
+<br>

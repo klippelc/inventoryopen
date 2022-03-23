@@ -1,0 +1,130 @@
+﻿@model Inventory.Web.ViewModels.AssetVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    @*<h2>Delete</h2>*@
+    <h4>Are you sure you want to delete this?</h4>
+    <div class="form-horizontal">
+        <h5>Delete - @ViewBag.AssetType</h5>
+        <hr>
+
+        <div class="form-group row" id="InvoiceNoDiv">
+            @Html.LabelFor(model => model.InvoiceAndInvoiceItem, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.InvoiceAndInvoiceItem)
+            </div>
+        </div>
+
+        <div class="form-group row" id="CategoryDiv">
+            @Html.LabelFor(model => model.AssetCategoryName, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AssetCategoryName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ManuDiv">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Make</label>
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.ManufacturerName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ProductDiv">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold">Model</label>
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.ProductName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="DateReceivedDiv">
+            @Html.LabelFor(model => model.DateReceived, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @(Model.DateReceived?.ToString("MM/dd/yyyy"))
+            </div>
+        </div>
+
+        <div class="form-group row" id="AssetTagDiv">
+            @Html.LabelFor(model => model.AssetTag, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AssetTag)
+            </div>
+        </div>
+
+        <div class="form-group row" id="SerialDiv">
+            @Html.LabelFor(model => model.Serial, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Serial)
+            </div>
+        </div>
+
+        <div class="form-group row" id="MacAddressDiv" style="@(Model.AssetCategoryName != "Monitor" ? "" : "display:none")">
+            @Html.LabelFor(model => model.MacAddress, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.MacAddress)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ExpirationDateDiv">
+            @Html.LabelFor(model => model.ExpirationDate, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.ExpirationDate)
+            </div>
+        </div>
+
+        <div class="form-group row" id="StatusDiv">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AssetStatusName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="LocationDiv">
+            @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DisplayFor(model => model.FullLocation)
+            </div>
+        </div>
+
+        <div class="form-group row" id="AssignedUserDiv">
+            @Html.LabelFor(model => model.AssignedUser, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AssignedUserName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Notes)
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.AssetTypeName)
+        @Html.HiddenFor(model => model.PreviousUrl)
+
+
+        if (!string.IsNullOrEmpty(Model.PreviousUrl))
+        {
+            <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+        }
+        else
+        {
+            @Html.ActionLink("Back to List", "Index", "Hardware", null, new { @class = "btn btn-secondary" })
+        }
+        <input type="submit" value="Delete" class="btn btn-primary" />
+    }
+</div>
+
+<br>

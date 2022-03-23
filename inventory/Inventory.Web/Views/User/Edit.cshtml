@@ -1,0 +1,130 @@
+﻿@model Inventory.Web.ViewModels.UserVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @id = "EditUser" }))
+
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Edit - @ViewBag.AssetType</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.OriginalUserRoleIds)
+        @Html.HiddenFor(model => model.PreviousUrl)
+
+        <div class="form-group row" id="NameDiv">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "Name", @class = "form-control", @maxlength = "50", @disabled = "true" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="UserNameDiv">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @id = "UserName", @class = "form-control", @maxlength = "50", @disabled = "true" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ManagerDiv">
+            @Html.LabelFor(model => model.Manager, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @if (Model.ManagerId != null)
+                {
+                    @Html.EditorFor(model => model.Manager.NameWithUserName, new { htmlAttributes = new { @id = "UserName", @class = "form-control", @maxlength = "50", @disabled = "true" } })
+                }
+                else
+                {
+                    @Html.EditorFor(model => model.ManagerName, new { htmlAttributes = new { @id = "UserName", @class = "form-control", @maxlength = "50", @disabled = "true" } })
+                }
+                @Html.ValidationMessageFor(model => model.Manager, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ActiveDiv">
+            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.DropDownListFor(model => model.Active, new SelectList(CustomExtensions.Statuses, "Value", "Text"), null, new { @id = "Active", @class = "form-control", @disabled = "true" })
+                @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LastLoginDiv">
+            @Html.LabelFor(model => model.InventoryLastLoginDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3 ml-1">
+                @(Model.InventoryLastLoginDate?.ToString("MM/dd/yyyy"))
+            </div>
+        </div>
+
+        <div class="form-group row" id="LastLogonDiv">
+            @Html.LabelFor(model => model.ADLastLogonDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3 ml-1">
+                @(Model.ADLastLogonDate?.ToString("MM/dd/yyyy"))
+            </div>
+        </div>
+
+        <div class="form-group row" id="MobilePhoneDiv">
+            @Html.LabelFor(model => model.MobilePhone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.MobilePhone, new { htmlAttributes = new { @id = "Phone", @class = "form-control", @minlength = "11" } })
+                @Html.ValidationMessageFor(model => model.MobilePhone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="UserRoleDiv">
+            @Html.LabelFor(model => model.UserRoles, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 flex-nowrap fit-width">
+                @foreach (var role in Model.UserRoles)
+                {
+                    <div class="custom-control custom-checkbox form-inline col-sm-6 float-left flex-nowrap fit-width">
+                        <input type="checkbox" class="custom-control-input" name="UserRoleIds" value="@role.Id" id="@role.Id" @role.Checked>
+                        <label class="custom-control-label float-left" for="@role.Id">@role.Description</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @maxlength = "500", @rows = "5" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="HardwareDiv">
+            <div class="col-md-offset-2 col-md-4">
+                @if (!string.IsNullOrEmpty(Model.PreviousUrl) && !Model.PreviousUrl.Contains("Details"))
+                {
+                    <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "User", null, new { @class = "btn btn-secondary" })
+                }
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+
+    </div>
+    }
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(function () {
+            Common.PhoneFormat();
+        });
+    </script>
+
+}

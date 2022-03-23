@@ -1,0 +1,123 @@
+﻿@model Inventory.Web.ViewModels.RoomVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    <h4>Are you sure you want to delete this?</h4>
+    <div class="form-horizontal">
+        <h5>Delete - @ViewBag.AssetType</h5>
+        <hr>
+
+        <div class="form-group row" id="WarningDiv">
+            <label class="control-label col-md-6 h6 text-danger">@ViewBag.Warning</label>
+        </div>
+
+        <div class="form-group row" id="LocationDiv">
+            @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Location.DisplayName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="BuildingDiv">
+            @Html.LabelFor(model => model.Building, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Building.DisplayName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="PropertyIdDiv">
+            @Html.LabelFor(model => model.PropertyId, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.PropertyId)
+            </div>
+        </div>
+
+        <div class="form-group row" id="NameDiv">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group row" id="DisplayNameDiv">
+            @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.DisplayName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="DescriptioneDiv">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Description)
+            </div>
+        </div>
+
+        <div class="form-group row" id="CapacityDiv">
+            @Html.LabelFor(model => model.Capacity, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Capacity)
+            </div>
+        </div>
+
+        <div class="form-group row" id="RoomTypeDiv">
+            @Html.LabelFor(model => model.RoomType, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.RoomTypeName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="LongitudeDiv">
+            @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Longitude)
+            </div>
+        </div>
+
+        <div class="form-group row" id="LatitudeDiv">
+            @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Latitude)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ActiveDiv">
+            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.YesNo(Model.Active)
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Notes)
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+
+        if (!string.IsNullOrEmpty(Model.PreviousUrl))
+        {
+            <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+        }
+        else
+        {
+            @Html.ActionLink("Back to List", "Index", "Room", null, new { @class = "btn btn-secondary" })
+        }
+        <input type="submit" value="Delete" class="btn btn-primary" disabled="@(Model.AssetCount > 0)" />
+    }
+</div>
+
+<br>

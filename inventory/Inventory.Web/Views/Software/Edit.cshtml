@@ -1,0 +1,214 @@
+﻿@model Inventory.Web.ViewModels.AssetVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @id = "EditAsset" }))
+
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Edit - @ViewBag.AssetType</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.InvoiceItemId)
+        @Html.HiddenFor(model => model.InvoiceNumber)
+        @Html.HiddenFor(model => model.InvoiceAndInvoiceItem)
+        @Html.HiddenFor(model => model.AssetTypeName)
+        @Html.HiddenFor(model => model.AssetCategoryName)
+        @Html.HiddenFor(model => model.AssetStatusName)
+        @Html.HiddenFor(model => model.AssetStatusGroup)
+        @Html.HiddenFor(model => model.ManuId)
+        @Html.HiddenFor(model => model.ManufacturerName)
+        @Html.HiddenFor(model => model.ProductId)
+        @Html.HiddenFor(model => model.ProductName)
+        @Html.HiddenFor(model => model.LicenseTypeName)
+        @Html.HiddenFor(model => model.ExpirationDate)
+        @Html.HiddenFor(model => model.OriginalAssetTag)
+        @Html.HiddenFor(model => model.OriginalSerial)
+        @Html.HiddenFor(model => model.OriginalMacAddress)
+        @Html.HiddenFor(model => model.OriginalLicenseKeyMulti)
+        @Html.HiddenFor(model => model.OriginalAssignedUserId)
+        @Html.HiddenFor(model => model.OriginalAssignedAssetId)
+        @Html.HiddenFor(model => model.OrignialStatusId)
+        @Html.HiddenFor(model => model.OriginalLocationId)
+        @Html.HiddenFor(model => model.OriginalBuildingId)
+        @Html.HiddenFor(model => model.OriginalRoomId)
+        @Html.HiddenFor(model => model.Display)
+        @Html.HiddenFor(model => model.Location.DisplayName)
+        @Html.HiddenFor(model => model.Building.Id)
+        @Html.HiddenFor(model => model.Building.DisplayName)
+        @Html.HiddenFor(model => model.Room.Id)
+        @Html.HiddenFor(model => model.Room.DisplayName)
+        @Html.HiddenFor(model => model.AssignedUser.Id)
+        @Html.HiddenFor(model => model.AssignedUser.Name)
+        @Html.HiddenFor(model => model.AssignedAsset.Id)
+        @Html.HiddenFor(model => model.AssignedAsset.Name)
+        @Html.HiddenFor(model => model.AssignedAsset.Serial)
+        @Html.HiddenFor(model => model.AssignedAsset.SerialandAssignedUser)
+        @Html.HiddenFor(model => model.PreviousUrl)
+        @Html.HiddenFor(model => model.PONumber)
+
+
+        <div class="form-group row" id="PurchaseOrderNoDiv">
+            @Html.LabelFor(model => model.PONumber, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-2">
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesView")))
+                {
+                    @Html.ActionLink(Model.PONumber, "Index", "Invoice", new { SearchString = Model.PONumber }, new { @class = "text-decoration-none" })
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.PONumber)
+                }
+            </div>
+        </div>
+
+        <div class="form-group row" id="InvoiceNoDiv">
+            @Html.LabelFor(model => model.InvoiceAndInvoiceItem, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-4 col-lg-3 col-xl-3">
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoiceItemsView")))
+                {
+                    @Html.ActionLink(Model.InvoiceAndInvoiceItem, "Index", "InvoiceItem", new { SearchString = Model.InvoiceAndInvoiceItem }, new { @id = "InvoiceNumber", @class = "text-decoration-none" })
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.InvoiceAndInvoiceItem)
+                }
+            </div>
+        </div>
+
+        <div class="form-group row" id="CategoryDiv">
+            @Html.LabelFor(model => model.AssetCategoryName, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.AssetCategoryName, new { htmlAttributes = new { @id = "Category", @class = "form-control", @disabled = "true" } })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ManuDiv">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2">Manufacturer</label>
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.ManufacturerName, new { htmlAttributes = new { @id = "ManufacturerName", @class = "form-control", @disabled = "true" } })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ProductDiv">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2">Product</label>
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @id = "Product", @class = "form-control", @disabled = "true" } })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="DateReceivedDiv">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2">Date Received</label>
+            <div class="col-md-4 col-lg-3 col-xl-3">
+                @Html.EditorFor(model => model.DefaultDateReceived, new { htmlAttributes = new { @id = "DateReceived", @class = "form-control", placeholder = "Select Date", @required = "true", @type = "date" } })
+                @Html.ValidationMessageFor(model => model.DefaultDateReceived, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LicenseTypeDiv">
+            @Html.LabelFor(model => model.LicenseTypeName, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-4 col-lg-3 col-xl-3">
+                @Html.EditorFor(model => model.LicenseTypeName, new { htmlAttributes = new { @id = "LicenseType", @class = "form-control", @disabled = "true" } })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LicenseDiv" style="@(Model.LicenseTypeName == "Hardware-Single" ? "" : "display:none")">
+            @Html.LabelFor(model => model.LicenseKeySingle, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-4">
+                @Html.EditorFor(model => model.LicenseKeySingle, new { htmlAttributes = new { @class = "form-control", @minlength = "5", @maxlength = "25", @disabled = "true" } })
+                @Html.ValidationMessageFor(model => model.LicenseKeySingle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LicenseDiv" style="@(Model.LicenseTypeName == "Hardware-Multi" ? "" : "display:none")">
+            @Html.LabelFor(model => model.LicenseKeyMulti, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-4">
+                @Html.EditorFor(model => model.LicenseKeyMulti, new { htmlAttributes = new { @class = "form-control", @minlength = "5", @maxlength = "25" } })
+                @Html.ValidationMessageFor(model => model.LicenseKeyMulti, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ExpirationDateDiv" style="@(Model.LicenseTypeName == "User" ? "" : "display:none")">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2">Expiration Date</label>
+            <div class="col-md-4 col-lg-3 col-xl-3">
+                @Html.EditorFor(model => model.ExpirationDate, new { htmlAttributes = new { @id = "ExpirationDate", @class = "form-control", @disabled = "true" } })
+            </div>
+        </div>
+
+        <div class="form-group row" id="StatusDiv">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-4 col-lg-3 col-xl-3">
+                @Html.DropDownListFor(model => model.StatusId, new SelectList(Model.Statuses, "Id", "Name"), null, new { @id = "AssetStatus", @class = "form-control", @required = "true" })
+                @Html.ValidationMessageFor(model => model.StatusId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="AssignedUserDiv" style="@(Model.AssetStatusGroup == "Active" && Model.LicenseTypeName == "User" ? "" : "display:none")">
+            @Html.LabelFor(model => model.AssignedUser, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.AssignedUserId, new SelectList(Model.Users, "UserId", "NameWithUserName"), "Please Select", new { @id = "AssignedUser", @required = "true", @class = "form-control border selectpicker" })
+                @Html.ValidationMessageFor(model => model.AssignedUserId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="AssignedAssetDiv" style="@(Model.AssetStatusGroup == "Active" && Model.LicenseTypeName != "User" ? "" : "display:none")">
+            @Html.LabelFor(model => model.AssignedAsset, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.AssignedAssetId, new SelectList(Model.Assets, "Id", "SerialandAssignedUser"), "Please Select", new { @id = "AssignedAsset", @required = "true", @class = "form-control border selectpicker" })
+                @Html.ValidationMessageFor(model => model.AssignedAssetId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @maxlength = "500", @rows = "5" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="HardwareDiv">
+            <div class="col-md-offset-2 col-md-5">
+                @if (!string.IsNullOrEmpty(Model.PreviousUrl) && !Model.PreviousUrl.Contains("Details"))
+                {
+                    <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "Software", null, new { @class = "btn btn-secondary" })
+                }
+                <input id="btn-submit" type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            style: 'btn-light, text-dark',
+            size: 10,
+            dropupAuto: true,
+        });
+
+        $(function () {
+            Common.DatePicker();
+            Asset.UpdateAssignedUserId();
+            Asset.Status();
+            Common.DisableEnableSubmit("#EditAsset");
+        });
+
+    </script>
+
+}

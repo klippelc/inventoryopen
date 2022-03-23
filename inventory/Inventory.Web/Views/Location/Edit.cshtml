@@ -1,0 +1,230 @@
+﻿@model Inventory.Web.ViewModels.LocationVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @id = "EditLocation" }))
+
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Edit - @ViewBag.AssetType</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.OriginalName)
+        @Html.HiddenFor(model => model.OriginalDisplayName)
+        @Html.HiddenFor(model => model.OriginalCode)
+        @Html.HiddenFor(model => model.OriginalLocationAmenityIds)
+        @Html.HiddenFor(model => model.OriginalPropertyId)
+        @Html.HiddenFor(model => model.OriginalSubnetAddress)
+        @Html.HiddenFor(model => model.OriginalLocationAliasNames)
+        @Html.HiddenFor(model => model.LocationAliasNames)
+        @Html.HiddenFor(model => model.PreviousUrl)
+
+        <div class="form-group row" id="PropertyIdDiv">
+            @Html.LabelFor(model => model.PropertyId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.PropertyId, new { htmlAttributes = new { @id = "PropertyId", @type = "text", @class = "form-control", @minlength = "4", @maxlength = "4" } })
+                @Html.ValidationMessageFor(model => model.PropertyId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="NameDiv">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "Name", @class = "form-control", @maxlength = "100", @required = "true", @pattern = "^[a-zA-Z0-9' '_/&.-]*$" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="DisplayNameDiv">
+            @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @id = "DisplayName", @class = "form-control", @maxlength = "100", @pattern = "^[a-zA-Z0-9' '_/&.-]*$" } })
+                @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="CodeDiv">
+            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @id = "Code", @class = "form-control", @maxlength = "2" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="DescriptionDiv">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @id = "Description", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="AliasDiv">
+            @Html.LabelFor(model => model.LocationAliases, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.LocationAliasNames, new { htmlAttributes = new { @id = "Alias", @class = "form-control", @data_role = "tagsinput" } })
+                @Html.ValidationMessageFor(model => model.LocationAliasNames, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="PhoneDiv">
+            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @id = "Phone", @class = "form-control", @minlength = "11" } })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="AddressLine1Div">
+            @Html.LabelFor(model => model.AddressLine1, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.AddressLine1, new { htmlAttributes = new { @id = "AddressLine1", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.AddressLine1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="AddressLine2Div">
+            @Html.LabelFor(model => model.AddressLine2, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.AddressLine2, new { htmlAttributes = new { @id = "AddressLine2", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.AddressLine2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="CityDiv">
+            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.CityId, new SelectList(Model.Cities, "Id", "Name"), "Please Select", new { @id = "City", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="StateDiv">
+            @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.StateId, new SelectList(Model.States, "Id", "Name"), null, new { @id = "State", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="PostalCodeDiv">
+            @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @id = "PostalCode", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LongitudeDiv">
+            @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @id = "Longitude", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.Longitude, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LatitudeDiv">
+            @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @id = "Latitude", @class = "form-control", @maxlength = "150" } })
+                @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="SubnetAddressDiv">
+            @Html.LabelFor(model => model.SubnetAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.SubnetAddress, new { htmlAttributes = new { @id = "SubnetAddress", @class = "form-control col-md-6", @maxlength = "15" } })
+                @Html.ValidationMessageFor(model => model.SubnetAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="LocationAmenityDiv">
+            @Html.LabelFor(model => model.LocationAmenities, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @foreach (var amenity in Model.LocationAmenities)
+                {
+                    <div class="custom-control custom-checkbox form-inline col-sm-6 float-left">
+                        <input type="checkbox" class="custom-control-input" name="LocationAmenityIds" value="@amenity.Id" id="@amenity.Id" @amenity.Checked>
+                        <label class="custom-control-label float-left" for="@amenity.Id">@amenity.Name</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group row" id="LeadManagerDiv">
+            @Html.LabelFor(model => model.LeadManager, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.LeadManagerId, new SelectList(Model.Users, "UserId", "Name"), "Please Select", new { @id = "LeadManager", @class = "form-control border selectpicker" })
+                @Html.ValidationMessageFor(model => model.LeadManagerId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ActiveDiv">
+            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.DropDownListFor(model => model.Active, new SelectList(CustomExtensions.Statuses, "Value", "Text"), null, new { @id = "Active", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @maxlength = "500", @rows = "5" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="HardwareDiv">
+            <div class="col-md-offset-2 col-md-4">
+                @if (!string.IsNullOrEmpty(Model.PreviousUrl) && !Model.PreviousUrl.Contains("Details"))
+                {
+                    <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "Location", null, new { @class = "btn btn-secondary" })
+                }
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+
+    </div>
+    }
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $("#Alias").tagsinput({
+            onlyAlphaNumeric: true,
+            maxChars: 35,
+            trimValue: true,
+            maxTags: 5,
+            focusClass: 'focusedInput',
+            confirmKeys: [13, 44]
+        });
+
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            style: 'btn-light, text-dark',
+            size: 10,
+            dropupAuto: true,
+        });
+
+        $(function () {
+            Location.Alias("../../Asset/LocationAliasCheck");
+            Common.PhoneFormat();
+        });
+    </script>
+
+}

@@ -1,0 +1,102 @@
+﻿@model Inventory.Web.ViewModels.ProductVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    <div class="form-horizontal">
+        <h4>Details - @ViewBag.AssetType</h4>
+        <hr>
+
+        <div class="form-group row" id="TypeDiv">
+            @Html.LabelFor(model => model.AssetType, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AssetTypeName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="AssetCategoryDiv">
+            @Html.LabelFor(model => model.AssetCategory, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AssetCategoryName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ManufacturerDiv">
+            @Html.LabelFor(model => model.Manufacturer, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.ManufacturerName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="NameDiv">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group row" id="DisplayNameDiv">
+            @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.DisplayName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="DescriptionDiv">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Description)
+            </div>
+        </div>
+
+        <div class="form-group row" id="AssetTypeDiv">
+            @Html.LabelFor(model => model.AssetTypeName, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AssetTypeName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="AssetCategoryDiv">
+            @Html.LabelFor(model => model.AssetCategoryName, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.AssetCategoryName)
+            </div>
+        </div>
+
+        <div class="form-group row" id="ActiveDiv">
+            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.YesNo(Model.Active)
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.Notes)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    @if (!string.IsNullOrEmpty(Model.PreviousUrl))
+    {
+        <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Index", "Product", null, new { @class = "btn btn-secondary" })
+    }
+
+    @if (TempData["AssetCreated"] != null)
+    {
+        @Html.ActionLink("Add Another " + TempData["AssetCreated"], "Create", new { previousUrl = Model.PreviousUrl }, new { @class = "btn btn-primary" })
+    }
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id, previousUrl = Model.PreviousUrl }, new { @class = "btn btn-primary" })
+</div>
+
+<br>

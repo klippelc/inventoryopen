@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{970B635C-A3F2-4366-B35B-01D10CE8F790}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Inventory.Data</RootNamespace>
+    <AssemblyName>Inventory.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=6.2.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.6.2.0\lib\netstandard2.0\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=6.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.6.0.0\lib\net472\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi, Version=6.0.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.WebApi2.6.0.1\lib\net472\Autofac.Integration.WebApi.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.EntityFramework, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.EntityFramework.1.0.1\lib\net45\PagedList.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.5.0.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\BaseEntity.cs" />
+    <Compile Include="Migrations\202102182135170_FirstSeed.cs" />
+    <Compile Include="Migrations\202102182135170_FirstSeed.designer.cs">
+      <DependentUpon>202102182135170_FirstSeed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102242050094_ProductAndLocationUpdated.cs" />
+    <Compile Include="Migrations\202102242050094_ProductAndLocationUpdated.designer.cs">
+      <DependentUpon>202102242050094_ProductAndLocationUpdated.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102242215248_ProductAndInvoiceItemsUpdated.cs" />
+    <Compile Include="Migrations\202102242215248_ProductAndInvoiceItemsUpdated.designer.cs">
+      <DependentUpon>202102242215248_ProductAndInvoiceItemsUpdated.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103012024488_connectedAssets.cs" />
+    <Compile Include="Migrations\202103012024488_connectedAssets.designer.cs">
+      <DependentUpon>202103012024488_connectedAssets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103221947194_LocationAlias.cs" />
+    <Compile Include="Migrations\202103221947194_LocationAlias.designer.cs">
+      <DependentUpon>202103221947194_LocationAlias.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103241534307_updatedAliases.cs" />
+    <Compile Include="Migrations\202103241534307_updatedAliases.designer.cs">
+      <DependentUpon>202103241534307_updatedAliases.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104071629195_addedDrawer.cs" />
+    <Compile Include="Migrations\202104071629195_addedDrawer.Designer.cs">
+      <DependentUpon>202104071629195_addedDrawer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104131724232_AddedMananger.cs" />
+    <Compile Include="Migrations\202104131724232_AddedMananger.designer.cs">
+      <DependentUpon>202104131724232_AddedMananger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104141659067_addedManagerName.cs" />
+    <Compile Include="Migrations\202104141659067_addedManagerName.designer.cs">
+      <DependentUpon>202104141659067_addedManagerName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104211907502_AddedIPAddress.cs" />
+    <Compile Include="Migrations\202104211907502_AddedIPAddress.designer.cs">
+      <DependentUpon>202104211907502_AddedIPAddress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104222041275_AddedIconCSS.cs" />
+    <Compile Include="Migrations\202104222041275_AddedIconCSS.designer.cs">
+      <DependentUpon>202104222041275_AddedIconCSS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104222048426_AddedIconCSS2.cs" />
+    <Compile Include="Migrations\202104222048426_AddedIconCSS2.designer.cs">
+      <DependentUpon>202104222048426_AddedIconCSS2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104222131129_AddedIconCSS3.cs" />
+    <Compile Include="Migrations\202104222131129_AddedIconCSS3.designer.cs">
+      <DependentUpon>202104222131129_AddedIconCSS3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105241433092_RoleDefinition.cs" />
+    <Compile Include="Migrations\202105241433092_RoleDefinition.designer.cs">
+      <DependentUpon>202105241433092_RoleDefinition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105281258554_addedSequenceToStatus.cs" />
+    <Compile Include="Migrations\202105281258554_addedSequenceToStatus.designer.cs">
+      <DependentUpon>202105281258554_addedSequenceToStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105281311275_addedGroupToStatus.cs" />
+    <Compile Include="Migrations\202105281311275_addedGroupToStatus.designer.cs">
+      <DependentUpon>202105281311275_addedGroupToStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105281518449_addedBoolsToStatus.cs" />
+    <Compile Include="Migrations\202105281518449_addedBoolsToStatus.designer.cs">
+      <DependentUpon>202105281518449_addedBoolsToStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106091700509_addAssetStatusTypeTable.cs" />
+    <Compile Include="Migrations\202106091700509_addAssetStatusTypeTable.designer.cs">
+      <DependentUpon>202106091700509_addAssetStatusTypeTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106241516218_addedIconCSSToStatus.cs" />
+    <Compile Include="Migrations\202106241516218_addedIconCSSToStatus.designer.cs">
+      <DependentUpon>202106241516218_addedIconCSSToStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106241526208_addedColorCSSToStatus.cs" />
+    <Compile Include="Migrations\202106241526208_addedColorCSSToStatus.designer.cs">
+      <DependentUpon>202106241526208_addedColorCSSToStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202107011459368_AssetListModels.cs" />
+    <Compile Include="Migrations\202107011459368_AssetListModels.designer.cs">
+      <DependentUpon>202107011459368_AssetListModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202107121503389_surplusInfo.cs" />
+    <Compile Include="Migrations\202107121503389_surplusInfo.Designer.cs">
+      <DependentUpon>202107121503389_surplusInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108091837456_addedNewLoginDates.cs" />
+    <Compile Include="Migrations\202108091837456_addedNewLoginDates.designer.cs">
+      <DependentUpon>202108091837456_addedNewLoginDates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108101426539_userAssetConfirmation.cs" />
+    <Compile Include="Migrations\202108101426539_userAssetConfirmation.designer.cs">
+      <DependentUpon>202108101426539_userAssetConfirmation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108131430168_AddedAssignedDate.cs" />
+    <Compile Include="Migrations\202108131430168_AddedAssignedDate.designer.cs">
+      <DependentUpon>202108131430168_AddedAssignedDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108311603447_addedLastLoginDatesColumn.cs" />
+    <Compile Include="Migrations\202108311603447_addedLastLoginDatesColumn.designer.cs">
+      <DependentUpon>202108311603447_addedLastLoginDatesColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AssetCategory.cs" />
+    <Compile Include="Models\AssetList.cs" />
+    <Compile Include="Models\AssetStatusType.cs" />
+    <Compile Include="Models\AssetUserList.cs" />
+    <Compile Include="Models\BuildingAmenity.cs" />
+    <Compile Include="Models\InvoiceItem.cs" />
+    <Compile Include="Models\AssetStatus.cs" />
+    <Compile Include="Models\AssetType.cs" />
+    <Compile Include="Models\AuditLog.cs" />
+    <Compile Include="Models\Building.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="Models\LicenseType.cs" />
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\LocationAlias.cs" />
+    <Compile Include="Models\LocationAmenity.cs" />
+    <Compile Include="Models\AmenityType.cs" />
+    <Compile Include="Models\Manufacturer.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Asset.cs" />
+    <Compile Include="Models\Invoice.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\Amenity.cs" />
+    <Compile Include="Models\RoomAmenity.cs" />
+    <Compile Include="Models\RoomType.cs" />
+    <Compile Include="Models\State.cs" />
+    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserAssetConfirmation.cs" />
+    <Compile Include="Models\UserRole.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\InventoryDbContext.cs" />
+    <Compile Include="SqlServerTypes\Loader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Docs\PKSAssetMangementDocumentation.docx" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SqlServerTypes\readme.htm" />
+    <Content Include="SqlServerTypes\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\InvoiceItemInsertTrigger.sql" />
+    <Content Include="SQL\InvoiceItemUpdateTrigger.sql" />
+    <Content Include="SQL\InvoiceUpdateTrigger.sql" />
+    <Content Include="SQL\InvoiceInsertTrigger.sql" />
+    <Content Include="SQL\sp_ImportADUsers.sql" />
+    <Content Include="SQL\CreateLinkedServer.sql" />
+    <Content Include="SQL\AssetUpdateTrigger.sql" />
+    <Content Include="SQL\AssetInsertTrigger.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202102182135170_FirstSeed.resx">
+      <DependentUpon>202102182135170_FirstSeed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102242050094_ProductAndLocationUpdated.resx">
+      <DependentUpon>202102242050094_ProductAndLocationUpdated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102242215248_ProductAndInvoiceItemsUpdated.resx">
+      <DependentUpon>202102242215248_ProductAndInvoiceItemsUpdated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103012024488_connectedAssets.resx">
+      <DependentUpon>202103012024488_connectedAssets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103221947194_LocationAlias.resx">
+      <DependentUpon>202103221947194_LocationAlias.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103241534307_updatedAliases.resx">
+      <DependentUpon>202103241534307_updatedAliases.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104071629195_addedDrawer.resx">
+      <DependentUpon>202104071629195_addedDrawer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104131724232_AddedMananger.resx">
+      <DependentUpon>202104131724232_AddedMananger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104141659067_addedManagerName.resx">
+      <DependentUpon>202104141659067_addedManagerName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104211907502_AddedIPAddress.resx">
+      <DependentUpon>202104211907502_AddedIPAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104222041275_AddedIconCSS.resx">
+      <DependentUpon>202104222041275_AddedIconCSS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104222048426_AddedIconCSS2.resx">
+      <DependentUpon>202104222048426_AddedIconCSS2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104222131129_AddedIconCSS3.resx">
+      <DependentUpon>202104222131129_AddedIconCSS3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105241433092_RoleDefinition.resx">
+      <DependentUpon>202105241433092_RoleDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105281258554_addedSequenceToStatus.resx">
+      <DependentUpon>202105281258554_addedSequenceToStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105281311275_addedGroupToStatus.resx">
+      <DependentUpon>202105281311275_addedGroupToStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105281518449_addedBoolsToStatus.resx">
+      <DependentUpon>202105281518449_addedBoolsToStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106091700509_addAssetStatusTypeTable.resx">
+      <DependentUpon>202106091700509_addAssetStatusTypeTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106241516218_addedIconCSSToStatus.resx">
+      <DependentUpon>202106241516218_addedIconCSSToStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106241526208_addedColorCSSToStatus.resx">
+      <DependentUpon>202106241526208_addedColorCSSToStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202107011459368_AssetListModels.resx">
+      <DependentUpon>202107011459368_AssetListModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202107121503389_surplusInfo.resx">
+      <DependentUpon>202107121503389_surplusInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108091837456_addedNewLoginDates.resx">
+      <DependentUpon>202108091837456_addedNewLoginDates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108101426539_userAssetConfirmation.resx">
+      <DependentUpon>202108101426539_userAssetConfirmation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108131430168_AddedAssignedDate.resx">
+      <DependentUpon>202108131430168_AddedAssignedDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108311603447_addedLastLoginDatesColumn.resx">
+      <DependentUpon>202108311603447_addedLastLoginDatesColumn.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

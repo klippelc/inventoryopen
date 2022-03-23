@@ -1,0 +1,279 @@
+﻿@model PagedList.IPagedList<Inventory.Web.ViewModels.PagedListVM>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+    var TotalItems = String.Format("{0:N0}", Model.TotalItemCount);
+    var assetListId = ViewBag.AssetListId ?? 0;
+}
+
+<style>
+    .pagination {
+        margin: 0px;
+    }
+
+    .bg-info {
+        background-color: rgba(16, 43, 118, 0.22) !important;
+    }
+
+    @@media only screen and (max-width: 1380px) {
+        .one {
+            display: none;
+        }
+
+        .two {
+            display: table-cell;
+        }
+    }
+
+    @@media only screen and (min-width: 1381px) {
+        .one {
+            display: table-cell;
+        }
+
+        .two {
+            display: none;
+        }
+    }
+</style>
+
+<div class="container maxwidth">
+    <h2>@ViewBag.AssetType</h2>
+
+    @using (Html.BeginForm("Index", null, FormMethod.Get))
+    {
+        if (ViewBag.InvoiceItemId != null)
+        {
+            <input type="hidden" name="InvoiceItemId" value="@ViewBag.InvoiceItemId" />
+        }
+        if (ViewBag.LicenseType != null)
+        {
+            <input type="hidden" name="LicenseType" value="@ViewBag.LicenseType" />
+        }
+        if (ViewBag.CurrentSort != null)
+        {
+            <input type="hidden" name="sortOrder" value="@ViewBag.CurrentSort" />
+        }
+        if (ViewBag.AssetListId != null)
+        {
+            <input type="hidden" name="assetListId" value="@ViewBag.AssetListId" />
+        }
+
+        <div class="row mb-1">
+            <div class="col-sm-12">
+                <font class="small">Total Items: @TotalItems</font>
+                <font class="medium d-print-none">|</font>
+                @Html.ActionLink(" ", "ExportToExcel", "Software", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, invoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Class = "far fa-file-excel text-decoration-none d-print-none", @Title = "Excel" })
+                @Html.ActionLink(" ", "Index", null, new { @Onclick = "window.print();", @Class = "fas fa-print text-decoration-none d-print-none", @Title = "Print" })
+
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("SoftwareView")))
+                {
+                    if (Model.Where(x => x.AssetList.Any(al => al != null)).Count() > 0)
+                    {
+                        <font class="medium d-print-none">|</font>
+                        if (User.IsInRole("AssetListManage") && (Model.Where(x => x.AssetList.Any(al => al.IsOwner == true)).Count() > 0))
+                        {
+                            <a href="javascript:" type="button" class="fa-sm far fa-plus-square text-decoration-none d-print-none" id="AddToList" title="Add To List"></a>
+                            <a href="javascript:" type="button" class="fa-sm far fa-minus-square text-decoration-none d-print-none" id="RemoveFromList" title="Remove From List"></a>
+                        }
+                        foreach (var item in Model.Select(x => x.AssetList.GroupBy(g => new { g.Id, g.Name, g.Shared, g.IsOwner }).Select(s => new { s.Key.Id, s.Key.Name, s.Key.Shared, s.Key.IsOwner })).FirstOrDefault().OrderBy(x => x.Name))
+                        {
+                            if (item.Shared == true && item.IsOwner == false)
+                            {
+                                @Html.ActionLink(item.Name, "Index", "Software", new { assetListId = item.Id }, new { @class = (ViewBag.AssetListId == item.Id) ? "small text-decoration-none font-weight-bold d-print-none" : "small text-decoration-none d-print-none" })
+                                <small class="fas fa-xs fa-user-friends" style="color: royalblue">,</small>
+                            }
+                            else
+                            {
+                                @Html.ActionLink(item.Name + ", ", "Index", "Software", new { assetListId = item.Id }, new { @class = (ViewBag.AssetListId == item.Id) ? "small text-decoration-none font-weight-bold d-print-none" : "small text-decoration-none d-print-none" })
+                            }
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="row mb-1 row mb-1 align-items-end d-print-none">
+            <div class="col-lg-9 align-middle">
+                @Html.ActionLink("| Filter: ", "Index", new { currentSearch = ViewBag.CurrentSearch, sortOrder = ViewBag.CurrentSort, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = "small text-dark text-decoration-none" })
+                @foreach (var item in Model.Select(x => x.LicenseTypes).FirstOrDefault().OrderBy(x => x.Name))
+                {
+                    @Html.ActionLink(item.Name + ", ", "Index", "Software", new { licenseType = item.Name, activeStatus = ViewBag.ActiveStatus, currentSearch = ViewBag.CurrentSearch, sortOrder = ViewBag.CurrentSort, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @class = ViewBag.LicenseType != null ? "small text-decoration-none font-weight-bold" : "small text-decoration-none" })
+                }
+                <small>|</small>
+            </div>
+
+            <div class="col-xl-3 form-inline text-xl-right d-sm-table d-md-table d-lg-table d-xl-table d-print-none pt-2 pt-xl-0">
+                @Html.TextBox("SearchString", ViewBag.CurrentSearch as string, new { @class = "form-control form-control-sm ", @placeholder = "Search", @style = "width: 200px;", @maxlength = "30" })
+                <input type="submit" value="Search" class="btn btn-secondary btn-sm" style="margin-left: 5px;" />
+            </div>
+        </div>
+    }
+</div>
+
+<div class="container maxwidth">
+
+    <table class="table table-striped table-bordered" style="vertical-align:middle;">
+        <thead>
+            <tr>
+                @if ((User.Identity.IsAuthenticated) && ((User.IsInRole("HardwareEdit")) || (User.IsInRole("ManageParkAssets"))))
+                {
+                    <th scope="col" class="text-center d-print-none" style="width: 30px;">
+                        <input type="checkbox" id="checkedAll" name="checkedAll">
+                    </th>
+                }
+                <th scope="col" class="text-center d-print-none" style="width: 40px;">
+                    @Html.ActionLink("C", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.CateogrySortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Software Category" })
+                </th>
+                <th scope="col" class="text-center d-print-none" style="width: 40px;">
+                    @Html.ActionLink("LT", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.LicenseTypeSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "License Type" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-none d-md-none d-none d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Manufacturer", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.ManuSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Manufacturer" })
+                </th>
+                <th scope="col" class="w-auto d-table-cell d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Product", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.ProductSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Product" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("License", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.LicenseSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "License" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("User", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.AssignedUserSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Assigned User" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Asset", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.AssignedAssetSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Assigned Asset" })
+                </th>
+                <th scope="col" class="w-auto d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-table-cell">
+                    @Html.ActionLink("Loc", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.AssignedLocationSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Assigned Location" })
+                </th>
+                <th scope="col" class="w-auto text-center d-none d-sm-none d-md-none d-lg-table-cell d-xl-table-cell d-print-none">
+                    @Html.ActionLink("Item", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.InvoiceSortOrder, currentSearch = ViewBag.CurrentSearch, AssetListId = ViewBag.AssetListId }, new { @Title = "Item Number" })
+                </th>
+                <th scope="col" class="one text-center">
+                    @Html.ActionLink("Status", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.StatusSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Status" })
+                </th>
+                <th scope="col" class="two text-center d-print-none">
+                    @Html.ActionLink("Status", "Index", new { licenseType = ViewBag.LicenseType, sortOrder = ViewBag.StatusSortOrder, currentSearch = ViewBag.CurrentSearch, InvoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }, new { @Title = "Status" })
+                </th>
+                <th scope="col" style="width: 80px;" class="d-print-none">
+                    @if ((User.Identity.IsAuthenticated) && ((User.IsInRole("SoftwareEdit")) || (User.IsInRole("ManageParkAssets"))))
+                    {
+                        <button type="button" class="btn btn-sm btn-light" id="GetAssets" data-type="Edit Assets" style=" display: block; width: 100%; padding: initial"><i class="far fa-edit"></i></button>
+                    }
+                </th>
+            </tr>
+        </thead>
+        <tbody class="align-text-bottom">
+            @{
+                Html.RenderPartial("_List");
+            }
+        </tbody>
+    </table>
+
+    <div class="row mb-1 d-print-none">
+        <div class="col-sm-4" style="margin-bottom:5px;">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        </div>
+        <div class="col-sm-8 form-inline text-right">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, licenseType = ViewBag.LicenseType, sortOrder = ViewBag.CurrentSort, currentSearch = ViewBag.CurrentSearch, invoiceItemId = ViewBag.InvoiceItemId, AssetListId = ViewBag.AssetListId }))
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AssetBulkModal" tabindex="-1" role="dialog" aria-labelledby="AssetBulkModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AssetBulkModalLabel"></h5>
+                <small style="margin-top:8px" id="AssetBulkModalCount"></small>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            @using (Html.BeginForm("BulkEdit", "Software", FormMethod.Post, new { @Id = "AssetBulkForm" }))
+            {
+                <div class="modal-body">
+
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="AssetIds" name="AssetIds" />
+                    <input type="hidden" id="AssignedUserId" name="AssignedUserId">
+
+                    @if ((User.Identity.IsAuthenticated) && (User.IsInRole("SoftwareEdit")))
+                    {
+                        <div class="form-group" id="DateReceivedDiv">
+                            <label class="col-form-label">DateReceived</label>
+                            <div>
+                                <input type="date" id="DateReceived" name="DateReceived" class="form-control">
+                                @Html.ValidationMessage("DateReceived", "", new { @id = "Val_DateReceived", @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="StatusDiv">
+                            <label class="col-form-label">Status</label>
+                            <div>
+                                <select name="StatusId" id="Status" class="form-control"></select>
+                                @Html.ValidationMessage("Status", "", new { @id = "Val_Status", @class = "text-danger" })
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group was-validated" id="AssignedUserDiv">
+                        <label class="col-form-label">Assigned User</label>
+                        <div>
+                            <select name="AssignedUser" id="AssignedUser" class="form-control border selectpicker"></select>
+                            @Html.ValidationMessage("AssignedUser", "", new { @id = "Val_AssignedUser", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group was-validated" id="AssignedAssetDiv">
+                        <label class="col-form-label">Assigned Asset</label>
+                        <div>
+                            <select name="AssignedAssetId" id="AssignedAsset" class="form-control border selectpicker"></select>
+                            @Html.ValidationMessage("AssignedAsset", "", new { @id = "Val_AssignedAsset", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="NotesDiv">
+                        <label class="col-form-label">Notes</label>
+                        <div>
+                            <textarea name="Notes" id="Notes" rows="3" class="form-control"></textarea>
+                            @Html.ValidationMessage("Notes", "", new { @id = "Val_Notes", @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btn-submit" disabled>Save</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@{
+    Html.RenderPartial("../AssetList/_ListEdit");
+}
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            style: 'btn-light, text-dark',
+            size: 10,
+            dropupAuto: true,
+        });
+
+        Common.CheckedAll();
+        Asset.GetBulkAssets("Software/BulkEdit");
+        Asset.EditBulkAssets("Software/BulkEdit");
+        Common.DisableEnableSubmit("#AssetBulkForm");
+        AssetList.AddToList("Software");
+        AssetList.RemoveFromList(@assetListId, "Software");
+
+    </script>
+
+}

@@ -1,0 +1,310 @@
+﻿@model Inventory.Web.ViewModels.AssetVM
+
+@{
+    ViewBag.Title = ViewBag.AssetType;
+}
+
+<div class="container">
+
+    @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @id = "EditAsset" }))
+
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Edit - @ViewBag.AssetType</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.PONumber)
+        @Html.HiddenFor(model => model.InvoiceItemId)
+        @Html.HiddenFor(model => model.InvoiceAndInvoiceItem)
+        @Html.HiddenFor(model => model.AssetTypeName)
+        @Html.HiddenFor(model => model.AssetCategoryName)
+        @Html.HiddenFor(model => model.AssetStatusName)
+        @Html.HiddenFor(model => model.AssetStatusGroup)
+        @Html.HiddenFor(model => model.ManuId)
+        @Html.HiddenFor(model => model.ManufacturerName)
+        @Html.HiddenFor(model => model.ProductId)
+        @Html.HiddenFor(model => model.ProductName)
+        @Html.HiddenFor(model => model.LicenseTypeName)
+        @Html.HiddenFor(model => model.ExpirationDate)
+        @Html.HiddenFor(model => model.OriginalAssetTag)
+        @Html.HiddenFor(model => model.OriginalName)
+        @Html.HiddenFor(model => model.OriginalDescription)
+        @Html.HiddenFor(model => model.OriginalSerial)
+        @Html.HiddenFor(model => model.OriginalMacAddress)
+        @Html.HiddenFor(model => model.OriginalAssignedUserId)
+        @Html.HiddenFor(model => model.OriginalAssignedAssetId)
+        @Html.HiddenFor(model => model.OriginalConnectedAssetId)
+        @Html.HiddenFor(model => model.OrignialStatusId)
+        @Html.HiddenFor(model => model.OriginalLocationId)
+        @Html.HiddenFor(model => model.OriginalBuildingId)
+        @Html.HiddenFor(model => model.OriginalRoomId)
+        @Html.HiddenFor(model => model.OriginalDrawer)
+        @Html.HiddenFor(model => model.OriginalIPAddress)
+        @Html.HiddenFor(model => model.Display)
+        @Html.HiddenFor(model => model.LocationId)
+        @Html.HiddenFor(model => model.Location.Id)
+        @Html.HiddenFor(model => model.BuildingId)
+        @Html.HiddenFor(model => model.Building.Id)
+        @Html.HiddenFor(model => model.RoomId)
+        @Html.HiddenFor(model => model.Room.Id)
+        @Html.HiddenFor(model => model.AssignedUser.Id)
+        @Html.HiddenFor(model => model.AssignedUser.Name)
+        @Html.HiddenFor(model => model.AssignedUserId)
+        @Html.HiddenFor(model => model.ConnectedAsset.Id)
+        @Html.HiddenFor(model => model.ConnectedAsset.Name)
+        @Html.HiddenFor(model => model.ConnectedAsset.AssetNameOrSerial)
+        @Html.HiddenFor(model => model.PreviousUrl)
+        @Html.HiddenFor(model => model.StatusId)
+
+        <div class="form-group row" id="PurchaseOrderNoDiv">
+            @Html.LabelFor(model => model.PONumber, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-2">
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoicesView")))
+                {
+                    @Html.ActionLink(Model.PONumber, "Index", "Invoice", new { SearchString = Model.PONumber }, new { @id = "InvoiceNumber", @class = "text-decoration-none" })
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.PONumber)
+                }
+            </div>
+        </div>
+
+        <div class="form-group row" id="InvoiceNoDiv">
+            @Html.LabelFor(model => model.InvoiceAndInvoiceItem, htmlAttributes: new { @class = "control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-4 col-lg-3 col-xl-3">
+                @if ((User.Identity.IsAuthenticated) && (User.IsInRole("InvoiceItemsView")))
+                {
+                    @Html.ActionLink(Model.InvoiceAndInvoiceItem, "Index", "InvoiceItem", new { SearchString = Model.InvoiceAndInvoiceItem }, new { @id = "InvoiceNumber", @class = "text-decoration-none" })
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.InvoiceAndInvoiceItem)
+                }
+            </div>
+        </div>
+
+        <div class="form-group row" id="CategoryDiv">
+            @Html.LabelFor(model => model.AssetCategoryName, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.AssetCategoryName, new { htmlAttributes = new { @id = "Category", @class = "form-control", @disabled = "true" } })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ManuDiv">
+            <label class="control-label control-label col-md-3 col-lg-2 col-xl-2">Make</label>
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.ManufacturerName, new { htmlAttributes = new { @id = "Manufacturer", @class = "form-control", @disabled = "true" } })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ProductDiv">
+            <label class="control-label control-label col-md-3 col-lg-2 col-xl-2">Model</label>
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @id = "Product", @class = "form-control", @disabled = "true" } })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="DateReceivedDiv">
+            <label class="control-label col-md-3 col-lg-2 col-xl-2">Date Received</label>
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.DefaultDateReceived, new { htmlAttributes = new { @id = "DateReceived", @class = "form-control", placeholder = "Select Date", @required = "true", @type = "date" } })
+                @Html.ValidationMessageFor(model => model.DefaultDateReceived, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="NameDiv" style="@(Model.AssetCategoryName ==  "Desktop" || Model.AssetCategoryName  == "Laptop" || Model.AssetCategoryName == "Server" || Model.AssetCategoryName == "Switch" || Model.AssetCategoryName == "Printer" ? "" : "display:none")">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "Name", @class = "form-control", @maxlength = "30" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="ConnectedAssetDiv" style="@((Model.AssetStatusGroup == "Active" && (Model.AssetCategoryName !=  "Desktop" && Model.AssetCategoryName  != "Laptop" && Model.AssetCategoryName != "Server")) ? "" : "display:none")">
+            @Html.LabelFor(model => model.ConnectedAsset, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.ConnectedAssetId, new SelectList(Model.ComputerTypeAssets, "Id", "AssetNameOrSerialAndUser"), "Please Select", new { @id = "ConnectedAsset", @class = "form-control border selectpicker" })
+                @Html.ValidationMessageFor(model => model.ConnectedAssetId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="DescriptionDiv">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @id = "Description", @class = "form-control", @maxlength = "50" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="DrawerDiv" style="@(((Model.AssetStatusName == "Active") && (Model.AssetCategoryName ==  "Desktop" || Model.AssetCategoryName  == "Laptop" || Model.AssetCategoryName == "Server")) ? "" : "display:none")">
+            @Html.LabelFor(model => model.Drawer, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-3 col-lg-3 col-xl-3">
+                @Html.EditorFor(model => model.Drawer, new { htmlAttributes = new { @id = "Drawer", @class = "form-control", @maxlength = "4", @pattern = "^[0-9]{1,4}$" } })
+                @Html.ValidationMessageFor(model => model.Drawer, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="SerialDiv">
+            @Html.LabelFor(model => model.Serial, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.Serial, new { htmlAttributes = new { @id = "Serial", @class = "form-control", @minlength = "5", @maxlength = "25", @required = "true" } })
+                @Html.ValidationMessageFor(model => model.Serial, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="AssetTagDiv">
+            @Html.LabelFor(model => model.AssetTag, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.AssetTag, new { htmlAttributes = new { @id = "AssetTag", @class = "form-control", @minlength = "4", @maxlength = "6", @required = "true", @pattern = "[0-9]{4}([0-9]{2})?" } })
+                @Html.ValidationMessageFor(model => model.AssetTag, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="IPAddressDiv" style="@(Model.AssetCategoryName != "Monitor" ? "" : "display:none")">
+            @Html.LabelFor(model => model.IPAddress, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.IPAddress, new { htmlAttributes = new { @id = "IPAddress", @class = "form-control", @maxlength = "17", @pattern = "\\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\\b" } })
+                @Html.ValidationMessageFor(model => model.IPAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="MacAddressDiv" style="@(Model.AssetCategoryName != "Monitor" ? "" : "display:none")">
+            @Html.LabelFor(model => model.MacAddress, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.MacAddress, new { htmlAttributes = new { @id = "MacAddress", @class = "form-control", @maxlength = "17", @pattern = "^([0-9a-fA-F]{2}(?:[:-]?[0-9a-fA-F]{2}){5})$" } })
+                @Html.ValidationMessageFor(model => model.MacAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="ExpirationDateDiv">
+            @Html.LabelFor(model => model.ExpirationDate, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.ExpirationDate, new { htmlAttributes = new { @id = "ExpirationDate", @class = "form-control", @disabled = "true", @required = "true" } })
+            </div>
+        </div>
+
+        <div class="form-group row" id="StatusDiv">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-3">
+                @Html.DropDownListFor(model => model.StatusId, new SelectList(Model.Statuses, "Id", "Name"), null, new { @id = "AssetStatus", @class = "form-control", @required = "true" })
+                @Html.ValidationMessageFor(model => model.StatusId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="SurplusDateDiv">
+            @Html.LabelFor(model => model.SurplusDate, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.SurplusDate, new { htmlAttributes = new { @id = "SurplusDate", @class = "form-control", placeholder = "Select Date", @required = "true", @type = "date" } })
+                @Html.ValidationMessageFor(model => model.SurplusDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="SNFnumberDiv">
+            @Html.LabelFor(model => model.SNFnumber, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                @Html.EditorFor(model => model.SNFnumber, new { htmlAttributes = new { @id = "SNFnumber", @class = "form-control", @minlength = "4", @maxlength = "15", @required = "true" } })
+                @Html.ValidationMessageFor(model => model.SNFnumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="AssignedUserDiv" style="@(Model.AssetStatusGroup == "Active" ? "" : "display:none")">
+            @Html.LabelFor(model => model.AssignedUser, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.AssignedUserId, new SelectList(Model.Users, "UserId", "NameWithUserName"), "Please Select", new { @id = "AssignedUser", @required = "true", @class = "form-control border selectpicker" })
+                @Html.ValidationMessageFor(model => model.AssignedUserId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row was-validated" id="LocationDiv">
+            @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.LocationId, new SelectList(Model.Locations, "Id", "DisplayName"), "Please Select", new { @id = "Location", @required = "true", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.LocationId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="BuildingDiv">
+            @Html.LabelFor(model => model.Building, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.BuildingId, new SelectList(Model.Buildings, "Id", "DisplayName"), "Please Select", new { @id = "Building", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.BuildingId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="RoomDiv">
+            @Html.LabelFor(model => model.Room, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.DropDownListFor(model => model.RoomId, new SelectList(Model.Rooms, "Id", "DisplayName"), "Please Select", new { @id = "Room", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RoomId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="NotesDiv">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label control-label col-md-3 col-lg-2 col-xl-2" })
+            <div class="col-md-7 col-lg-6 col-xl-5">
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @maxlength = "500", @rows = "5" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row" id="HardwareDiv">
+            <div class="col-md-offset-2 col-md-5">
+                @if (!string.IsNullOrEmpty(Model.PreviousUrl) && !Model.PreviousUrl.Contains("Details"))
+                {
+                    <a href="@Model.PreviousUrl" class="btn btn-secondary" role="button" aria-disabled="true">Back to List</a>
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "Hardware", null, new { @class = "btn btn-secondary" })
+                }
+
+                <input id="btn-submit" type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            style: 'btn-light, text-dark',
+            size: 10,
+            dropupAuto: true,
+        });
+
+        $(function () {
+            Common.DatePicker();
+            Asset.GetBuildings("../../Asset/Buildings");
+            Asset.GetRooms("../../Asset/Rooms");
+            Asset.UpdateRoomId();
+            Asset.UpdateAssignedUserId("../../Asset/GetUserDefaultLocation");
+            Asset.Status();
+            Asset.ConnectedAsset("../../Asset/ConnectedAsset");
+            Common.DisableEnableSubmit("#EditAsset");
+
+            //$("#ConnectedAsset").change(function () {
+            //    console.log("Test4");
+            //    $('#AssetStatus option:selected').prop('selected', false);
+            //    $("#AssetStatus option").filter(function (index) { return $(this).text() === "Available"; }).prop('selected', true);
+
+            //    console.log($("#AssetStatus").val());
+            //});
+
+        });
+
+    </script>
+
+}

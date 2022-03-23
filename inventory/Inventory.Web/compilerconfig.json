@@ -1,0 +1,42 @@
+﻿[
+  {
+    "outputFile": "Scripts/apps/portalApp.es5.js",
+    "inputFile": "Scripts/apps/portalApp.js"
+  },
+  {
+    "outputFile": "Scripts/apps/Common.es5.js",
+    "inputFile": "Scripts/apps/Common.js"
+  },
+  {
+    "outputFile": "Scripts/apps/Invoice.es5.js",
+    "inputFile": "Scripts/apps/Invoice.js"
+  },
+  {
+    "outputFile": "Scripts/apps/InvoiceItem.es5.js",
+    "inputFile": "Scripts/apps/InvoiceItem.js"
+  },
+  {
+    "outputFile": "Scripts/apps/Asset.es5.js",
+    "inputFile": "Scripts/apps/Asset.js"
+  },
+  {
+    "outputFile": "Scripts/apps/Product.es5.js",
+    "inputFile": "Scripts/apps/Product.js"
+  },
+  {
+    "outputFile": "Scripts/apps/Room.es5.js",
+    "inputFile": "Scripts/apps/Room.js"
+  },
+  {
+    "outputFile": "Scripts/apps/Location.es5.js",
+    "inputFile": "Scripts/apps/Location.js"
+  },
+  {
+    "outputFile": "Scripts/apps/AssetList.es5.js",
+    "inputFile": "Scripts/apps/AssetList.js"
+  },
+  {
+    "outputFile": "Scripts/apps/AssetConfirm.es5.js",
+    "inputFile": "Scripts/apps/AssetConfirm.js"
+  }
+]
